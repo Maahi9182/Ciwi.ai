@@ -13,7 +13,7 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Clean Replit canvas */
+    /* Base background & typography */
     html, body, [data-testid="stAppViewContainer"] {
         background-color: #FAF8F5 !important;
         color: #111827 !important;
@@ -54,7 +54,7 @@ st.markdown(
         font-size: 1.7rem;
     }
 
-    /* Hero */
+    /* Hero Text */
     .hero-title {
         text-align: center;
         font-size: 4rem;
@@ -72,38 +72,51 @@ st.markdown(
         margin-bottom: 2.4rem;
     }
 
-    /* Unified Search Bar with embedded Arrow */
+    /* Outer Capsule Wrapper */
     [data-testid="stForm"] {
-        border: 1px solid #E5E0D8 !important;
+        border: 1.5px solid #E5E0D8 !important;
         background-color: #FFFFFF !important;
-        border-radius: 20px !important;
-        padding: 0.35rem 0.5rem 0.35rem 1.4rem !important;
+        border-radius: 28px !important;
+        padding: 0.4rem 0.6rem 0.4rem 1.4rem !important;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
         display: flex !important;
         align-items: center !important;
-        transition: all 0.2s ease-in-out;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
     }
 
     [data-testid="stForm"]:focus-within {
         border-color: #F26522 !important;
-        box-shadow: 0 6px 25px rgba(242, 101, 34, 0.12) !important;
+        box-shadow: 0 4px 24px rgba(242, 101, 34, 0.15) !important;
     }
 
-    /* Remove borders and spacing inside form */
-    [data-testid="stForm"] div[data-testid="stTextInput"] {
-        flex-grow: 1 !important;
+    /* Strip ALL internal Streamlit input borders & highlights */
+    [data-testid="stForm"] div[data-testid="stTextInput"],
+    [data-testid="stForm"] div[data-testid="stTextInputRootElement"],
+    [data-testid="stForm"] div[data-baseweb="input"],
+    [data-testid="stForm"] div[data-baseweb="base-input"] {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
         padding: 0 !important;
         margin: 0 !important;
     }
 
-    [data-testid="stForm"] div[data-testid="stTextInput"] input {
+    /* Remove the 'Press Enter to submit form' caption helper */
+    [data-testid="stForm"] [data-testid="InputInstructions"],
+    [data-testid="stForm"] div:has(> [data-testid="InputInstructions"]) {
+        display: none !important;
+    }
+
+    /* Text input styling */
+    [data-testid="stForm"] input {
         border: none !important;
         outline: none !important;
         box-shadow: none !important;
         background: transparent !important;
         font-size: 1.1rem !important;
         color: #111827 !important;
-        padding: 0.8rem 0 !important;
+        padding: 0.6rem 0 !important;
     }
 
     /* Orange circular submit button */
@@ -120,7 +133,8 @@ st.markdown(
         justify-content: center !important;
         box-shadow: 0 2px 8px rgba(242, 101, 34, 0.35) !important;
         transition: transform 0.15s ease, background-color 0.15s ease;
-        margin-left: 0.5rem !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     [data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
@@ -142,7 +156,7 @@ st.markdown(
 
     div.stButton > button:hover {
         border-color: #CBD5E1 !important;
-        background-color: #F8FAFC !important;
+        background-color: #F8FAFB !important;
     }
 
     .prompt-label {
@@ -233,7 +247,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# --- Unified Search Bar with Form ---
+# --- Unified Search Bar ---
 with st.form("prompt_form", clear_on_submit=False):
     c_input, c_btn = st.columns([15, 1])
     with c_input:
