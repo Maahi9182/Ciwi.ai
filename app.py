@@ -18,7 +18,7 @@ st.markdown(
     """
     <style>
     html, body, [data-testid="stAppViewContainer"], .main {
-        background-color: #C2A67E !important;
+        background-color: #000000 !important;
         color: #FFFFFF !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
