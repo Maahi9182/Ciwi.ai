@@ -5,22 +5,19 @@ from google import genai
 from google.genai import types
 
 st.set_page_config(
-    page_title="Replit",
+    page_title="Ciwi AI",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
-# -----------------------------------------------------------------------------
-# Exact Replit Dark UI Styling
-# -----------------------------------------------------------------------------
 st.markdown(
     """
     <style>
-    /* Full Canvas Dark Theme with Ambient Glow */
+    /* Global Obsidian Theme */
     html, body, [data-testid="stAppViewContainer"], .main {
         background-color: #0E1117 !important;
-        background-image: radial-gradient(ellipse 65% 38% at 50% 88%, rgba(155, 52, 18, 0.28) 0%, rgba(14, 17, 23, 0) 75%) !important;
+        background-image: radial-gradient(ellipse 65% 38% at 50% 90%, rgba(155, 52, 18, 0.25) 0%, rgba(14, 17, 23, 0) 75%) !important;
         background-repeat: no-repeat !important;
         background-attachment: fixed !important;
         color: #EDEDED !important;
@@ -31,14 +28,20 @@ st.markdown(
         display: none !important;
     }
 
+    /* Fixed Layout & Bottom Anchor */
     .main .block-container {
         max-width: 900px !important;
         padding-top: 2rem !important;
-        padding-bottom: 3rem !important;
+        padding-bottom: 7rem !important;
         margin: 0 auto !important;
     }
 
-    /* Left Sidebar */
+    .workspace-active .main .block-container {
+        max-width: 100% !important;
+        padding: 1rem 1.5rem 7rem 1.5rem !important;
+    }
+
+    /* Sidebar Styling */
     [data-testid="stSidebar"] {
         background-color: #12151D !important;
         border-right: 1px solid #1C222E !important;
@@ -119,25 +122,47 @@ st.markdown(
         width: 100%;
     }
 
-    /* Recent Cards */
-    .recent-card {
-        background: #131722;
-        border: 1px solid #202736;
-        border-radius: 12px;
-        padding: 0.85rem 1.1rem;
-        cursor: pointer;
-        transition: border-color 0.15s;
+    /* Message Bubbles */
+    [data-testid="stChatMessage"] {
+        background-color: #161A23 !important;
+        border: 1px solid #242B38 !important;
+        border-radius: 12px !important;
+        padding: 1rem 1.2rem !important;
+        margin-bottom: 0.9rem !important;
     }
 
-    .recent-card:hover {
-        border-color: #38455C;
+    [data-testid="stChatMessage"] * {
+        color: #F3F4F6 !important;
+        line-height: 1.6 !important;
     }
 
-    /* Streamlit Pills Override */
+    /* Pinned Bottom Input */
+    [data-testid="stBottomBlockContainer"] {
+        background-color: #0E1117 !important;
+        border-top: 1px solid #1C222E !important;
+        padding: 0.8rem 1rem !important;
+    }
+
+    div[data-testid="stChatInput"] {
+        background-color: #161A23 !important;
+        border: 1px solid #283344 !important;
+        border-radius: 14px !important;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.45) !important;
+    }
+
+    div[data-testid="stChatInput"]:focus-within {
+        border-color: #F26522 !important;
+    }
+
+    div[data-testid="stChatInput"] textarea {
+        color: #FFFFFF !important;
+    }
+
+    /* Clean Category Action Pills */
     div.stButton > button {
-        background-color: #1A1E27 !important;
+        background-color: #181D26 !important;
         color: #D1D5DB !important;
-        border: 1px solid #2B3342 !important;
+        border: 1px solid #2A3344 !important;
         border-radius: 9999px !important;
         font-size: 0.86rem !important;
         font-weight: 500 !important;
@@ -148,97 +173,8 @@ st.markdown(
     }
 
     div.stButton > button:hover {
-        background-color: #232936 !important;
+        background-color: #222936 !important;
         border-color: #3F4C62 !important;
-        color: #FFFFFF !important;
-    }
-
-    /* Credit Warning Banner */
-    .credit-banner {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 2rem;
-        margin-bottom: 0.8rem;
-        font-size: 0.86rem;
-        color: #94A3B8;
-    }
-
-    .btn-upgrade-core {
-        background: #0070F3;
-        color: #FFFFFF;
-        border: none;
-        border-radius: 8px;
-        padding: 6px 14px;
-        font-size: 0.84rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    /* Console Form Box */
-    [data-testid="stForm"] {
-        background-color: #161A23 !important;
-        border: 1px solid #252D3C !important;
-        border-radius: 14px !important;
-        padding: 0.85rem 1.1rem 0.65rem 1.1rem !important;
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5) !important;
-    }
-
-    [data-testid="stForm"]:focus-within {
-        border-color: #384357 !important;
-    }
-
-    [data-testid="stForm"] div[data-testid="stTextInput"],
-    [data-testid="stForm"] div[data-testid="stTextInputRootElement"],
-    [data-testid="stForm"] div[data-baseweb="input"],
-    [data-testid="stForm"] div[data-baseweb="base-input"] {
-        border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-        padding: 0 !important;
-    }
-
-    [data-testid="stForm"] input {
-        background: transparent !important;
-        border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
-        font-size: 0.98rem !important;
-        color: #F8FAFC !important;
-        padding: 0.2rem 0 1.2rem 0 !important;
-    }
-
-    [data-testid="stForm"] input::placeholder {
-        color: #556275 !important;
-    }
-
-    .console-bottom-row {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-top: 1px solid #1C2330;
-        padding-top: 0.5rem;
-    }
-
-    /* Submit arrow button */
-    [data-testid="stForm"] button[kind="secondaryFormSubmit"] {
-        background: transparent !important;
-        border: none !important;
-        color: #8E9BAE !important;
-        font-size: 1.15rem !important;
-        font-weight: 700 !important;
-        padding: 0 !important;
-        min-width: 24px !important;
-        width: 24px !important;
-        height: 24px !important;
-        box-shadow: none !important;
-    }
-
-    [data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
         color: #FFFFFF !important;
     }
     </style>
@@ -246,17 +182,53 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Session initialization
+# Session State
 if "user_name" not in st.session_state:
     st.session_state.user_name = "Mahesh"
+if "project_name" not in st.session_state:
+    st.session_state.project_name = "Ciwi AI Assistant"
 if "view_mode" not in st.session_state:
-    st.session_state.view_mode = "home"
+    st.session_state.view_mode = "chat"  # 'chat' or 'build_slide'
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "html_code" not in st.session_state:
     st.session_state.html_code = ""
 
-# --- Sidebar (Exact Match) ---
+def detect_build_intent(prompt: str) -> bool:
+    """Detects if prompt requests creating a website, app, UI, or design component."""
+    keywords = ["build", "create", "make a website", "make an app", "design", "redesign", "add button", "clone", "code", "html", "css"]
+    return any(k in prompt.lower() for k in keywords)
+
+def query_gemini(prompt: str, is_build: bool):
+    api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
+    if not api_key:
+        return "Please add your GEMINI_API_KEY to Streamlit Secrets."
+    
+    client = genai.Client(api_key=api_key)
+
+    if is_build:
+        sys_inst = (
+            "You are Ciwi, an elite autonomous web-building AI. "
+            "1. Give a concise summary of changes and color scheme in markdown. "
+            "2. Provide complete, fully functional standalone HTML/CSS/JS inside a ```html ``` block."
+        )
+        context = f"Current App Code:\n{st.session_state.html_code}\n\nUser request: {prompt}"
+    else:
+        sys_inst = (
+            "You are Ciwi, a helpful and sharp AI assistant. "
+            "Provide clean, direct conversational replies. "
+            "Do NOT write HTML apps, UI cards, or code blocks for general chat or greetings."
+        )
+        context = prompt
+
+    res = client.models.generate_content(
+        model="gemini-3-flash-preview",
+        contents=context,
+        config=types.GenerateContentConfig(system_instruction=sys_inst, temperature=0.7),
+    )
+    return res.text
+
+# --- Sidebar ---
 with st.sidebar:
     st.markdown(
         """
@@ -326,172 +298,133 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-# --- Main Dashboard Content ---
-if st.session_state.view_mode == "home":
-    # 1. Recent projects row (3 items)
-    st.markdown('<div style="font-size:0.82rem; font-weight:600; color:#8B949E; margin-bottom:0.75rem;">Recent projects</div>', unsafe_allow_html=True)
-    
-    r1, r2, r3 = st.columns(3)
-    with r1:
+# --- MODE 1: Standard Chat View (Normal conversation & questions) ---
+if st.session_state.view_mode == "chat":
+    # Top hero greeting if chat is fresh
+    if not st.session_state.messages:
         st.markdown(
-            """
-            <div class="recent-card">
-                <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Ciwi AI Assistant</div>
-                <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 2 minutes ago</div>
-            </div>
-            """,
+            f'<div style="font-size:2.5rem; font-weight:600; color:#F3F4F6; margin-bottom:1.4rem;">{st.session_state.user_name}, what are we working on today?</div>',
             unsafe_allow_html=True,
         )
-    with r2:
+
         st.markdown(
             """
-            <div class="recent-card">
-                <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Fashion Showcase</div>
-                <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 53 minutes ago</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with r3:
-        st.markdown(
-            """
-            <div class="recent-card">
-                <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Dine Easy</div>
-                <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 3 months ago</div>
+            <div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:#8C96A5; margin-bottom:0.75rem;">
+                <span>Choose action or start typing</span>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-    st.markdown("<div style='height: 3rem;'></div>", unsafe_allow_html=True)
+        # Clear distinct category pills
+        col_c1, col_c2, col_c3 = st.columns(3)
+        with col_c1:
+            if st.button("🌐  Website Builder", use_container_width=True):
+                st.session_state.messages.append({"role": "user", "text": "Build a modern responsive website"})
+                st.session_state.view_mode = "build_slide"
+                reply = query_gemini("Build a modern responsive landing page website", is_build=True)
+                if "```html" in reply:
+                    st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
+                    st.session_state.messages.append({"role": "model", "text": reply.split("```html")[0].strip()})
+                st.rerun()
 
-    # 2. Main Greeting Headline
-    st.markdown(
-        f'<div style="font-size:2.5rem; font-weight:600; color:#F3F4F6; margin-bottom:1.4rem;">{st.session_state.user_name}, what are we working on today?</div>',
-        unsafe_allow_html=True,
-    )
+        with col_c2:
+            if st.button("📱  Mobile App View", use_container_width=True):
+                st.session_state.messages.append({"role": "user", "text": "Build a mobile app layout"})
+                st.session_state.view_mode = "build_slide"
+                reply = query_gemini("Build a mobile app interface with navigation and cards", is_build=True)
+                if "```html" in reply:
+                    st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
+                    st.session_state.messages.append({"role": "model", "text": reply.split("```html")[0].strip()})
+                st.rerun()
 
-    # 3. Suggested for you label
-    st.markdown(
-        """
-        <div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:#8C96A5; margin-bottom:0.75rem;">
-            <span>Suggested for you</span>
-            <span style="cursor:pointer;">⟳</span>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+        with col_c3:
+            if st.button("🎨  UI Component Design", use_container_width=True):
+                st.session_state.messages.append({"role": "user", "text": "Build an interactive UI component"})
+                st.session_state.view_mode = "build_slide"
+                reply = query_gemini("Build an interactive dashboard component", is_build=True)
+                if "```html" in reply:
+                    st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
+                    st.session_state.messages.append({"role": "model", "text": reply.split("```html")[0].strip()})
+                st.rerun()
 
-    # 4. The 3 Suggestion Pills
-    clicked_prompt = None
-    if st.button("✦  Help me get things done", key="p_help"):
-        clicked_prompt = "Build a productivity dashboard with task organization"
-    if st.button("🟥 Review RevenueCat growth", key="p_rc"):
-        clicked_prompt = "Build an analytics dashboard tracking RevenueCat MRR and subscribers"
-    if st.button("📄 Turn my notes into a slide deck", key="p_deck"):
-        clicked_prompt = "Build a presentation slide generator app from user notes"
+    # Chat history display (pops up above the bottom bar)
+    for m in st.session_state.messages:
+        role = "assistant" if m["role"] == "model" else "user"
+        with st.chat_message(role):
+            st.markdown(m["text"])
 
-    # 5. Credit Warning Banner
-    st.markdown(
-        """
-        <div class="credit-banner">
-            <span>You've used up your daily credits. Upgrade to continue.</span>
-            <button class="btn-upgrade-core"><span>+</span> Upgrade to Core</button>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
+    # Bottom pinned input
+    if prompt_text := st.chat_input("Start chatting or describe a task..."):
+        st.session_state.messages.append({"role": "user", "text": prompt_text})
+        is_build = detect_build_intent(prompt_text)
 
-    # 6. Console Search Bar
-    with st.form("replit_console_form", clear_on_submit=False):
-        user_input = st.text_input(
-            "Task",
-            placeholder="Start chatting or describe a task...",
-            label_visibility="collapsed",
-        )
-
-        st.markdown(
-            """
-            <div class="console-bottom-row">
-                <span style="color:#7E8B9D; font-size:1.15rem; cursor:pointer;">+</span>
-                <div style="display:flex; align-items:center; gap:16px;">
-                    <div style="display:inline-flex; align-items:center; gap:5px; color:#8E9BAE; font-size:0.82rem; cursor:pointer;">
-                        <span>:::</span>
-                        <span>Free ▾</span>
-                    </div>
-                    <span style="color:#7E8B9D; cursor:pointer; font-size:0.95rem;">🎙️</span>
-                </div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-        col_void, col_enter = st.columns([15, 1])
-        with col_enter:
-            submitted = st.form_submit_button("↑")
-
-    # Execution Handlers
-    task_to_run = user_input if (submitted and user_input) else clicked_prompt
-    if task_to_run:
-        api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
-        if not api_key:
-            st.error("Please add GEMINI_API_KEY in Secrets.")
-        else:
-            client = genai.Client(api_key=api_key)
-            st.session_state.view_mode = "workspace"
-            st.session_state.messages.append({"role": "user", "text": task_to_run})
-
-            with st.spinner("⚡ Ciwi Agent composing application..."):
-                res = client.models.generate_content(
-                    model="gemini-3-flash-preview",
-                    contents=(
-                        f"You are Ciwi AI Assistant. User task: '{task_to_run}'.\n"
-                        "1. Provide a brief design summary.\n"
-                        "2. Provide complete standalone HTML/CSS/JS code wrapped in a ```html ``` block."
-                    ),
-                )
-                output = res.text
-                if "```html" in output:
-                    st.session_state.html_code = output.split("```html")[1].split("```")[0].strip()
-                    chat_text = output.split("```html")[0].strip()
-                    st.session_state.messages.append({"role": "model", "text": chat_text if chat_text else "Application ready in preview."})
+        if is_build:
+            st.session_state.view_mode = "build_slide"
+            with st.spinner("⚡ Ciwi Agent launching build workspace..."):
+                reply = query_gemini(prompt_text, is_build=True)
+                if "```html" in reply:
+                    st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
+                    st.session_state.messages.append({"role": "model", "text": reply.split("```html")[0].strip()})
                 else:
-                    st.session_state.messages.append({"role": "model", "text": output})
+                    st.session_state.messages.append({"role": "model", "text": reply})
+        else:
+            with st.spinner("⚡ Ciwi responding..."):
+                reply = query_gemini(prompt_text, is_build=False)
+                st.session_state.messages.append({"role": "model", "text": reply})
 
-            st.rerun()
+        st.rerun()
 
-# --- Workspace Mode ---
+# --- MODE 2: Build Workspace (Split slide with live interactive preview) ---
 else:
-    t1, t2 = st.columns([8, 2])
-    with t1:
-        st.markdown("### 📁 Active Build · Ciwi AI Assistant")
-    with t2:
-        if st.button("← Back to Home"):
-            st.session_state.view_mode = "home"
+    t_left, t_right = st.columns([7, 3])
+    with t_left:
+        st.markdown(
+            f"""
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom: 0.6rem;">
+                <span style="background:#181E28; border:1px solid #232B39; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.85rem; color:#FFF;">📁 {st.session_state.project_name} ▾</span>
+                <span style="color:#94A3B8; font-size:0.82rem; font-weight:600;">Design</span>
+                <span style="color:#F26522; font-size:0.82rem; font-weight:700; border-bottom:2px solid #F26522;">Build</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with t_right:
+        if st.button("← Back to Chat", use_container_width=True):
+            st.session_state.view_mode = "chat"
             st.rerun()
 
     c_chat, c_prev = st.columns([1, 1], gap="medium")
+
     with c_chat:
-        box = st.container(height=520)
-        with box:
+        chat_box = st.container(height=520)
+        with chat_box:
             for m in st.session_state.messages:
                 role = "assistant" if m["role"] == "model" else "user"
                 with st.chat_message(role):
                     st.markdown(m["text"])
 
-        if follow := st.chat_input("Message Agent..."):
-            st.session_state.messages.append({"role": "user", "text": follow})
-            api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
-            client = genai.Client(api_key=api_key)
-            with st.spinner("⚡ Agent working..."):
-                res = client.models.generate_content(
-                    model="gemini-3-flash-preview",
-                    contents=f"Current code:\n{st.session_state.html_code}\n\nUser request: {follow}",
-                )
-                if "```html" in res.text:
-                    st.session_state.html_code = res.text.split("```html")[1].split("```")[0].strip()
-                st.session_state.messages.append({"role": "model", "text": res.text.split("```html")[0].strip()})
-                st.rerun()
+        if sub_msg := st.chat_input("Message Agent..."):
+            st.session_state.messages.append({"role": "user", "text": sub_msg})
+            with st.spinner("⚡ Updating live build..."):
+                reply = query_gemini(sub_msg, is_build=True)
+                if "```html" in reply:
+                    st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
+                    st.session_state.messages.append({"role": "model", "text": reply.split("```html")[0].strip()})
+                else:
+                    st.session_state.messages.append({"role": "model", "text": reply})
+            st.rerun()
 
     with c_prev:
-        components.html(st.session_state.html_code, height=560, scrolling=True)
+        st.markdown(
+            """
+            <div style="background:#161B24; border:1px solid #262E3E; border-radius:12px 12px 0 0; padding:0.5rem 0.8rem; display:flex; align-items:center; gap:8px;">
+                <span style="background:#0E1117; border:1px solid #262E3E; border-radius:6px; padding:2px 8px; font-size:0.75rem; color:#CBD5E1;">Ciwi Live Preview ✕</span>
+                <div style="background:#0E1117; border:1px solid #262E3E; border-radius:6px; padding:2px 8px; font-size:0.75rem; color:#8B949E; flex-grow:1; font-family:monospace;">
+                    https://ciwi.replit.dev/live-preview
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        components.html(st.session_state.html_code, height=520, scrolling=True)
