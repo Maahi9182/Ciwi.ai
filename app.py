@@ -3,203 +3,228 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
-# Page setup
 st.set_page_config(
     page_title="Ciwi AI",
     page_icon="⚡",
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="collapsed",
 )
 
-# Design styling
 st.markdown(
     """
     <style>
-    /* Warm canvas & typography */
+    /* Clean Replit canvas */
     html, body, [data-testid="stAppViewContainer"] {
         background-color: #FAF8F5 !important;
         color: #111827 !important;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
 
     [data-testid="stHeader"], [data-testid="stToolbar"] {
-        background: transparent !important;
+        display: none !important;
     }
 
-    .block-container {
-        max-width: 820px !important;
-        padding-top: 1.5rem !important;
-        padding-bottom: 4rem !important;
+    .main .block-container {
+        max-width: 860px !important;
+        padding-top: 1.8rem !important;
+        padding-bottom: 5rem !important;
+        margin: 0 auto !important;
     }
 
-    /* Top Navigation */
-    .brand-wrap {
+    /* Top Navigation bar */
+    .nav-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 3.5rem;
+    }
+
+    .logo-container {
         display: flex;
         align-items: center;
-        gap: 0.5rem;
-        font-size: 1.5rem;
-        font-weight: 800;
-        color: #111827;
-        letter-spacing: -0.03em;
-    }
-
-    .brand-icon {
-        color: #F26522;
+        gap: 0.6rem;
         font-size: 1.6rem;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+        color: #111827;
     }
 
-    /* Hero Text */
+    .logo-icon {
+        color: #F26522;
+        font-size: 1.7rem;
+    }
+
+    /* Hero */
     .hero-title {
         text-align: center;
-        font-size: 3.8rem;
+        font-size: 4rem;
         font-weight: 800;
         letter-spacing: -0.04em;
-        color: #141414;
-        margin-top: 2rem;
-        margin-bottom: 0.4rem;
-        line-height: 1.1;
+        color: #111827;
+        line-height: 1.05;
+        margin-bottom: 0.6rem;
     }
 
     .hero-subtitle {
         text-align: center;
         font-size: 1.15rem;
         color: #6B7280;
-        margin-bottom: 2.2rem;
+        margin-bottom: 2.4rem;
     }
 
-    /* Clean white inputs */
-    div[data-testid="stTextInput"] input {
-        background-color: #FFFFFF !important;
+    /* Unified Search Bar with embedded Arrow */
+    [data-testid="stForm"] {
         border: 1px solid #E5E0D8 !important;
-        border-radius: 16px !important;
-        height: 3.4rem !important;
-        font-size: 1.05rem !important;
-        padding-left: 1.2rem !important;
-        color: #111827 !important;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
+        background-color: #FFFFFF !important;
+        border-radius: 20px !important;
+        padding: 0.35rem 0.5rem 0.35rem 1.4rem !important;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
+        display: flex !important;
+        align-items: center !important;
+        transition: all 0.2s ease-in-out;
     }
 
-    div[data-testid="stTextInput"] input:focus {
+    [data-testid="stForm"]:focus-within {
         border-color: #F26522 !important;
-        box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.12) !important;
+        box-shadow: 0 6px 25px rgba(242, 101, 34, 0.12) !important;
     }
 
-    /* Neutral secondary pill buttons */
+    /* Remove borders and spacing inside form */
+    [data-testid="stForm"] div[data-testid="stTextInput"] {
+        flex-grow: 1 !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+    [data-testid="stForm"] div[data-testid="stTextInput"] input {
+        border: none !important;
+        outline: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+        font-size: 1.1rem !important;
+        color: #111827 !important;
+        padding: 0.8rem 0 !important;
+    }
+
+    /* Orange circular submit button */
+    [data-testid="stForm"] button[kind="secondaryFormSubmit"] {
+        background-color: #F26522 !important;
+        color: #FFFFFF !important;
+        border: none !important;
+        border-radius: 50% !important;
+        width: 44px !important;
+        height: 44px !important;
+        min-width: 44px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        box-shadow: 0 2px 8px rgba(242, 101, 34, 0.35) !important;
+        transition: transform 0.15s ease, background-color 0.15s ease;
+        margin-left: 0.5rem !important;
+    }
+
+    [data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
+        background-color: #DC5416 !important;
+        transform: scale(1.05);
+    }
+
+    /* Pill buttons for tabs and examples */
     div.stButton > button {
         background-color: #FFFFFF !important;
         color: #374151 !important;
         border: 1px solid #E5E0D8 !important;
         border-radius: 12px !important;
-        padding: 0.45rem 0.9rem !important;
         font-size: 0.92rem !important;
         font-weight: 500 !important;
-        transition: all 0.15s ease-in-out;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        padding: 0.5rem 1rem !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02) !important;
     }
 
     div.stButton > button:hover {
-        border-color: #D1D5DB !important;
-        background-color: #F9FAFB !important;
-        color: #111827 !important;
+        border-color: #CBD5E1 !important;
+        background-color: #F8FAFC !important;
     }
 
-    /* Orange circular action button */
-    .submit-btn div.stButton > button {
-        background-color: #F26522 !important;
-        color: #FFFFFF !important;
-        border: none !important;
-        border-radius: 14px !important;
-        height: 3.4rem !important;
-        font-size: 1.2rem !important;
-        font-weight: 700 !important;
-        box-shadow: 0 4px 14px rgba(242, 101, 34, 0.3) !important;
-    }
-
-    .submit-btn div.stButton > button:hover {
-        background-color: #DC5416 !important;
-        color: #FFFFFF !important;
-    }
-
-    /* Center prompt suggestions */
     .prompt-label {
         text-align: center;
         color: #9CA3AF;
-        font-size: 0.88rem;
-        margin-top: 1.8rem;
+        font-size: 0.85rem;
+        margin-top: 2rem;
         margin-bottom: 0.8rem;
     }
 
-    /* Result container card */
+    /* Output Card */
     .response-card {
         background-color: #FFFFFF;
         border: 1px solid #E5E0D8;
-        border-radius: 16px;
-        padding: 1.8rem;
-        margin-top: 2rem;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        border-radius: 18px;
+        padding: 2rem;
+        margin-top: 2.5rem;
+        box-shadow: 0 6px 24px rgba(0,0,0,0.03);
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# State initialization
+# Session state setup
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 if "user_name" not in st.session_state:
     st.session_state.user_name = None
 if "selected_mode" not in st.session_state:
     st.session_state.selected_mode = "Website"
-if "prefill_query" not in st.session_state:
-    st.session_state.prefill_query = ""
+if "query_value" not in st.session_state:
+    st.session_state.query_value = ""
 
-# Navigation Bar
-nav_col1, nav_col2, nav_col3 = st.columns([4, 1, 1])
+# --- Navigation Bar ---
+nav_left, nav_space, nav_sign_in, nav_sign_up = st.columns([5, 2.5, 1.2, 1.5])
 
-with nav_col1:
+with nav_left:
     st.markdown(
         """
-        <div class="brand-wrap">
-            <span class="brand-icon">⠕</span> Ciwi
+        <div class="logo-container">
+            <span class="logo-icon">⠕</span> Ciwi
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-with nav_col2:
+with nav_sign_in:
     if not st.session_state.authenticated:
         if st.button("Sign In", use_container_width=True):
             st.session_state.show_login = True
     else:
-        st.write(f"👋 **{st.session_state.user_name}**")
+        st.write(f"**{st.session_state.user_name}**")
 
-with nav_col3:
+with nav_sign_up:
     if not st.session_state.authenticated:
         if st.button("Create Account", use_container_width=True):
             st.session_state.show_login = True
     else:
         if st.button("Sign Out", use_container_width=True):
             st.session_state.authenticated = False
+            st.session_state.user_name = None
             st.rerun()
 
-# Google Login Modal Dropdown
+# --- Sign-In Modal Dropdown ---
 if st.session_state.get("show_login") and not st.session_state.authenticated:
-    with st.expander("Sign in to ciwi.ai with google.com", expanded=True):
-        m_col1, m_col2 = st.columns(2)
-        with m_col1:
+    with st.expander("Sign in to ciwi.ai with Google", expanded=True):
+        m1, m2 = st.columns(2)
+        with m1:
             if st.button("Mahi Ch (mahich9182@gmail.com)", use_container_width=True):
                 st.session_state.authenticated = True
                 st.session_state.user_name = "Mahi Ch"
                 st.session_state.show_login = False
                 st.rerun()
-        with m_col2:
+        with m2:
             if st.button("Mahesh (22b91a0134@gmail.com)", use_container_width=True):
                 st.session_state.authenticated = True
                 st.session_state.user_name = "Mahesh"
                 st.session_state.show_login = False
                 st.rerun()
 
-# Hero Header
+# --- Hero Title ---
 st.markdown(
     """
     <div class="hero-title">What will you build?</div>
@@ -208,106 +233,75 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Main Input Row
-input_box_col, btn_box_col = st.columns([6, 1])
+# --- Unified Search Bar with Form ---
+with st.form("prompt_form", clear_on_submit=False):
+    c_input, c_btn = st.columns([15, 1])
+    with c_input:
+        prompt_input = st.text_input(
+            "Prompt",
+            value=st.session_state.query_value,
+            placeholder="Build a website for...",
+            label_visibility="collapsed",
+        )
+    with c_btn:
+        submitted = st.form_submit_button("➔")
 
-placeholder_text = {
-    "Website": "Build a website for...",
-    "Image Gen": "Describe the visual scene to generate...",
-    "Mobile": "Build a mobile app for...",
-    "Design": "Design an interface layout for...",
-    "Animation": "Create an interactive animation for...",
-}.get(st.session_state.selected_mode, "Build a website for...")
-
-with input_box_col:
-    query = st.text_input(
-        label="Prompt",
-        value=st.session_state.prefill_query,
-        placeholder=placeholder_text,
-        label_visibility="collapsed",
-    )
-
-with btn_box_col:
-    st.markdown('<div class="submit-btn">', unsafe_allow_html=True)
-    trigger_submit = st.button("➔", use_container_width=True)
-    st.markdown("</div>", unsafe_allow_html=True)
-
-# Category Cards Below Input
-c1, c2, c3, c4, c5 = st.columns(5)
-
-with c1:
-    if st.button("💻  Website", use_container_width=True):
+# --- Category Rack ---
+cat1, cat2, cat3, cat4, cat5 = st.columns(5)
+with cat1:
+    if st.button("💻 Website", use_container_width=True):
         st.session_state.selected_mode = "Website"
-        st.rerun()
-with c2:
-    if st.button("🎨  Image Gen", use_container_width=True):
+with cat2:
+    if st.button("🎨 Image Gen", use_container_width=True):
         st.session_state.selected_mode = "Image Gen"
-        st.rerun()
-with c3:
-    if st.button("📱  Mobile", use_container_width=True):
+with cat3:
+    if st.button("📱 Mobile", use_container_width=True):
         st.session_state.selected_mode = "Mobile"
-        st.rerun()
-with c4:
-    if st.button("📐  Design", use_container_width=True):
+with cat4:
+    if st.button("📐 Design", use_container_width=True):
         st.session_state.selected_mode = "Design"
-        st.rerun()
-with c5:
-    if st.button("🎞️  Animation", use_container_width=True):
+with cat5:
+    if st.button("🎞️ Animation", use_container_width=True):
         st.session_state.selected_mode = "Animation"
-        st.rerun()
 
-# Example Prompt Pills
+# --- Example Prompt Pills ---
 st.markdown('<div class="prompt-label">Try an example prompt:</div>', unsafe_allow_html=True)
-ex_col1, ex_col2, ex_col3 = st.columns(3)
+p1, p2, p3 = st.columns(3)
 
-with ex_col1:
+with p1:
     if st.button("Startup analytics dashboard", use_container_width=True):
-        st.session_state.prefill_query = "Build a startup analytics dashboard"
+        st.session_state.query_value = "Build a startup analytics dashboard"
         st.rerun()
 
-with ex_col2:
+with p2:
     if st.button("Cohort analysis dashboard", use_container_width=True):
-        st.session_state.prefill_query = "Build a cohort analysis dashboard"
+        st.session_state.query_value = "Build a cohort analysis dashboard"
         st.rerun()
 
-with ex_col3:
+with p3:
     if st.button("Student budget tracker", use_container_width=True):
-        st.session_state.prefill_query = "Build a student budget tracker"
+        st.session_state.query_value = "Build a student budget tracker"
         st.rerun()
 
-# Processing & Response Generation
-if (trigger_submit or query) and trigger_submit:
+# --- Response Handling ---
+if submitted and prompt_input:
     api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
     if not api_key:
-        st.error("API Key missing. Please set GEMINI_API_KEY in Streamlit Secrets.")
+        st.error("Missing GEMINI_API_KEY in Secrets.")
     else:
         client = genai.Client(api_key=api_key)
         st.markdown('<div class="response-card">', unsafe_allow_html=True)
-
-        if st.session_state.selected_mode == "Image Gen":
-            st.markdown(f"**🎨 Generating Creative Visual Blueprint:** *{query}*")
-            with st.spinner("Formulating artistic concept..."):
-                resp = client.models.generate_content(
-                    model="gemini-3-flash-preview",
-                    contents=(
-                        f"Act as an art director. Provide an image prompt, exact camera/lens settings, "
-                        f"color palette, and cinematic lighting for: {query}"
+        with st.spinner(f"Ciwi is composing your {st.session_state.selected_mode}..."):
+            response = client.models.generate_content(
+                model="gemini-3-flash-preview",
+                contents=prompt_input,
+                config=types.GenerateContentConfig(
+                    system_instruction=(
+                        "You are Ciwi, an elite AI builder. Provide clean, modular, "
+                        "and immediately actionable plans or code."
                     ),
-                )
-                st.markdown(resp.text)
-        else:
-            with st.spinner(f"Ciwi is composing your {st.session_state.selected_mode} solution..."):
-                resp = client.models.generate_content(
-                    model="gemini-3-flash-preview",
-                    contents=query,
-                    config=types.GenerateContentConfig(
-                        system_instruction=(
-                            "You are Ciwi, an elite AI builder. Provide concise, clean, "
-                            "and directly applicable software code or structural plans."
-                        ),
-                        temperature=0.7,
-                    ),
-                )
-                st.markdown(resp.text)
-
+                    temperature=0.7,
+                ),
+            )
+            st.markdown(response.text)
         st.markdown("</div>", unsafe_allow_html=True)
