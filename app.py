@@ -11,21 +11,20 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
-# Custom High-Contrast & Glassmorphic Design
+# Custom High-Contrast & Glassmorphic Styling
 st.markdown(
     """
     <style>
-    /* Global background */
+    /* Dark background */
     .stApp {
         background: radial-gradient(circle at 50% 0%, #171923 0%, #0d1117 100%);
         color: #F8FAFC;
     }
 
-    /* Force high visibility for all text, headings, and lists */
+    /* Crisp white text for readability */
     h1, h2, h3, h4, h5, h6 {
         color: #FFFFFF !important;
         font-weight: 700 !important;
-        letter-spacing: -0.02em !important;
     }
 
     p, span, div, li {
@@ -34,7 +33,7 @@ st.markdown(
         line-height: 1.65;
     }
 
-    /* Message bubbles */
+    /* Glass chat bubbles */
     [data-testid="stChatMessage"] {
         background: rgba(255, 255, 255, 0.04) !important;
         border: 1px solid rgba(255, 255, 255, 0.08) !important;
@@ -45,13 +44,13 @@ st.markdown(
         -webkit-backdrop-filter: blur(12px);
     }
 
-    /* Highlight Ciwi's responses subtly */
+    /* Subdued purple highlight on Ciwi messages */
     [data-testid="stChatMessage"]:nth-child(even) {
-        background: rgba(99, 102, 241, 0.07) !important;
-        border: 1px solid rgba(129, 140, 248, 0.2) !important;
+        background: rgba(99, 102, 241, 0.08) !important;
+        border: 1px solid rgba(129, 140, 248, 0.25) !important;
     }
 
-    /* Frosted Glass Floating Bottom Input Bar */
+    /* Glass floating input bar */
     [data-testid="stBottomBlockContainer"] {
         background: transparent !important;
     }
@@ -62,18 +61,16 @@ st.markdown(
         -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
         border: 1px solid rgba(255, 255, 255, 0.18) !important;
         border-radius: 20px !important;
-        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45), 0 0 1px rgba(255, 255, 255, 0.3) inset !important;
-        transition: all 0.25s ease-in-out;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
     }
 
     [data-testid="stChatInput"]:focus-within {
         border-color: rgba(129, 140, 248, 0.7) !important;
-        box-shadow: 0 12px 35px rgba(99, 102, 241, 0.25), 0 0 10px rgba(129, 140, 248, 0.35) !important;
+        box-shadow: 0 12px 35px rgba(99, 102, 241, 0.25) !important;
     }
 
     [data-testid="stChatInput"] textarea {
         color: #FFFFFF !important;
-        font-size: 1rem !important;
     }
 
     [data-testid="stChatInput"] textarea::placeholder {
@@ -102,10 +99,10 @@ st.markdown(
     }
     </style>
     """,
-    unsafe_allow_html_query=True if hasattr(st, "unsafe_allow_html_query") else False,
+    unsafe_allow_html=True,
 )
 
-# Custom Title Section
+# Header Title
 st.markdown(
     """
     <div class="app-header">
@@ -138,7 +135,7 @@ if "messages" not in st.session_state:
         }
     ]
 
-# Render conversation
+# Render chat messages
 for msg in st.session_state.messages:
     role = "assistant" if msg["role"] == "model" else "user"
     avatar = "✨" if role == "assistant" else "👤"
