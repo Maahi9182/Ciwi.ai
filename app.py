@@ -11,7 +11,6 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# --- CSS Styling ---
 st.markdown(
     """
     <style>
@@ -151,7 +150,7 @@ st.markdown(
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-top: 2.2rem;
+        margin-top: 1.6rem;
         margin-bottom: 0.8rem;
         font-size: 0.86rem;
         color: #94A3B8;
@@ -179,6 +178,7 @@ st.markdown(
         padding: 0.85rem 1.1rem 0.65rem 1.1rem !important;
         box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5) !important;
         position: relative !important;
+        margin-top: 0.6rem !important;
     }
 
     [data-testid="stForm"]:focus-within {
@@ -196,7 +196,6 @@ st.markdown(
         padding: 0 !important;
     }
 
-    /* Ensure user typed text is clearly visible */
     [data-testid="stForm"] input {
         background: transparent !important;
         border: none !important;
@@ -219,7 +218,7 @@ st.markdown(
         padding-top: 0.5rem;
     }
 
-    /* Submit arrow button aligned in bottom right */
+    /* Submit arrow button */
     [data-testid="stForm"] button[kind="secondaryFormSubmit"] {
         background: transparent !important;
         border: none !important;
@@ -246,8 +245,8 @@ st.markdown(
         background-color: #141822 !important;
         border: 1px solid #232B3A !important;
         border-radius: 12px !important;
-        padding: 1rem !important;
-        margin-bottom: 0.8rem !important;
+        padding: 0.9rem 1.1rem !important;
+        margin-bottom: 0.75rem !important;
     }
 
     [data-testid="stChatMessage"] * {
@@ -306,7 +305,7 @@ def query_gemini(prompt: str, is_design: bool):
     )
     return res.text
 
-# --- Sidebar ---
+# --- Left Sidebar ---
 with st.sidebar:
     st.markdown(
         """
@@ -376,66 +375,77 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-# --- View Routing ---
+# --- HOME DASHBOARD ---
 if st.session_state.view_mode == "home":
-    st.markdown('<div style="font-size:0.82rem; font-weight:600; color:#8B949E; margin-bottom:0.75rem;">Recent projects</div>', unsafe_allow_html=True)
-    r1, r2, r3 = st.columns(3)
-    with r1:
-        st.markdown(
-            """
-            <div class="recent-card">
-                <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Ciwi AI Assistant</div>
-                <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 2 minutes ago</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with r2:
-        st.markdown(
-            """
-            <div class="recent-card">
-                <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Fashion Showcase</div>
-                <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 53 minutes ago</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-    with r3:
-        st.markdown(
-            """
-            <div class="recent-card">
-                <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Dine Easy</div>
-                <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 3 months ago</div>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
-
-    st.markdown("<div style='height: 3rem;'></div>", unsafe_allow_html=True)
-
-    st.markdown(
-        f'<div style="font-size:2.5rem; font-weight:600; color:#F3F4F6; margin-bottom:1.4rem;">{st.session_state.user_name}, what are we working on today?</div>',
-        unsafe_allow_html=True,
-    )
-
-    st.markdown(
-        """
-        <div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:#8C96A5; margin-bottom:0.75rem;">
-            <span>Suggested for you</span>
-            <span style="cursor:pointer;">⟳</span>
-        </div>
-        """,
-        unsafe_allow_html=True,
-    )
-
     clicked_task = None
-    if st.button("✦  Help me get things done", key="p_help"):
-        clicked_task = "Build a productivity dashboard with task organization"
-    if st.button("🟥  Review RevenueCat growth", key="p_rc"):
-        clicked_task = "Build an analytics dashboard tracking RevenueCat MRR and subscribers"
-    if st.button("📄  Turn my notes into a slide deck", key="p_deck"):
-        clicked_task = "Build a presentation slide generator app from user notes"
 
+    # Only show initial hero layout if no conversation has started yet
+    if not st.session_state.messages:
+        st.markdown('<div style="font-size:0.82rem; font-weight:600; color:#8B949E; margin-bottom:0.75rem;">Recent projects</div>', unsafe_allow_html=True)
+        r1, r2, r3 = st.columns(3)
+        with r1:
+            st.markdown(
+                """
+                <div class="recent-card">
+                    <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Ciwi AI Assistant</div>
+                    <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 2 minutes ago</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        with r2:
+            st.markdown(
+                """
+                <div class="recent-card">
+                    <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Fashion Showcase</div>
+                    <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 53 minutes ago</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+        with r3:
+            st.markdown(
+                """
+                <div class="recent-card">
+                    <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Dine Easy</div>
+                    <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 3 months ago</div>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+        st.markdown("<div style='height: 2.4rem;'></div>", unsafe_allow_html=True)
+
+        st.markdown(
+            f'<div style="font-size:2.5rem; font-weight:600; color:#F3F4F6; margin-bottom:1.4rem;">{st.session_state.user_name}, what are we working on today?</div>',
+            unsafe_allow_html=True,
+        )
+
+        st.markdown(
+            """
+            <div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:#8C96A5; margin-bottom:0.75rem;">
+                <span>Suggested for you</span>
+                <span style="cursor:pointer;">⟳</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        if st.button("✦  Help me get things done", key="p_help"):
+            clicked_task = "Build a productivity dashboard with task organization"
+        if st.button("🟥  Review RevenueCat growth", key="p_rc"):
+            clicked_task = "Build an analytics dashboard tracking RevenueCat MRR and subscribers"
+        if st.button("📄  Turn my notes into a slide deck", key="p_deck"):
+            clicked_task = "Build a presentation slide generator app from user notes"
+
+    # --- CHAT MESSAGES RENDER FIRST (ABOVE SEARCH BAR) ---
+    if st.session_state.messages:
+        for msg in st.session_state.messages:
+            role = "assistant" if msg["role"] == "model" else "user"
+            with st.chat_message(role):
+                st.markdown(msg["text"])
+
+    # Credit Warning Banner directly above input
     st.markdown(
         """
         <div class="credit-banner">
@@ -446,7 +456,7 @@ if st.session_state.view_mode == "home":
         unsafe_allow_html=True,
     )
 
-    # 6. Replit Search Form: Single-input form with active Enter listener
+    # --- SEARCH CONSOLE (BELOW CHAT MESSAGES) ---
     with st.form("home_search_form", clear_on_submit=True):
         typed_input = st.text_input(
             "Task",
@@ -473,15 +483,7 @@ if st.session_state.view_mode == "home":
 
         submitted = st.form_submit_button("↑")
 
-    # Display ongoing chat above the search bar
-    if st.session_state.messages:
-        st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
-        for msg in st.session_state.messages:
-            role = "assistant" if msg["role"] == "model" else "user"
-            with st.chat_message(role):
-                st.markdown(msg["text"])
-
-    # Submission logic: detects Enter key or arrow click
+    # Execution Handlers
     active_prompt = typed_input if (submitted and typed_input) else clicked_task
     if active_prompt:
         st.session_state.messages.append({"role": "user", "text": active_prompt})
@@ -502,7 +504,7 @@ if st.session_state.view_mode == "home":
 
         st.rerun()
 
-# --- WORKSPACE MODE (2-column layout when building) ---
+# --- WORKSPACE MODE (3rd slide: only for building web apps/UI) ---
 else:
     top_c1, top_c2 = st.columns([7, 3])
     with top_c1:
