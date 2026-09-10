@@ -11,15 +11,14 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# ---------------------------------------------------------
+# Global Replit Dark Theme CSS
+# ---------------------------------------------------------
 st.markdown(
     """
     <style>
-    /* Full Dark Canvas & Replit Amber Glow */
     html, body, [data-testid="stAppViewContainer"], .main {
         background-color: #0E1117 !important;
-        background-image: radial-gradient(ellipse 65% 38% at 50% 88%, rgba(155, 52, 18, 0.28) 0%, rgba(14, 17, 23, 0) 75%) !important;
-        background-repeat: no-repeat !important;
-        background-attachment: fixed !important;
         color: #EDEDED !important;
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
     }
@@ -29,9 +28,9 @@ st.markdown(
     }
 
     .main .block-container {
-        max-width: 880px !important;
+        max-width: 1080px !important;
         padding-top: 1.5rem !important;
-        padding-bottom: 3rem !important;
+        padding-bottom: 4rem !important;
         margin: 0 auto !important;
     }
 
@@ -39,14 +38,14 @@ st.markdown(
     [data-testid="stSidebar"] {
         background-color: #12151D !important;
         border-right: 1px solid #1C222E !important;
-        padding-top: 0.8rem !important;
+        padding-top: 0.6rem !important;
     }
 
     .sb-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        padding: 0.2rem 0.4rem 1rem 0.4rem;
+        padding: 0.2rem 0.4rem 0.8rem 0.4rem;
     }
 
     .workspace-pill {
@@ -63,34 +62,25 @@ st.markdown(
         margin-bottom: 0.8rem;
     }
 
-    .new-btn {
-        background: #1B212D;
-        border: 1px solid #283344;
-        border-radius: 8px;
-        padding: 7px 12px;
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #FFFFFF;
-        font-weight: 600;
-        font-size: 0.88rem;
-        margin-bottom: 0.8rem;
+    /* Sidebar buttons */
+    [data-testid="stSidebar"] div.stButton > button {
+        background-color: transparent !important;
+        color: #94A3B8 !important;
+        border: none !important;
+        border-radius: 6px !important;
+        font-size: 0.86rem !important;
+        font-weight: 500 !important;
+        text-align: left !important;
+        justify-content: flex-start !important;
+        padding: 0.4rem 0.6rem !important;
+        width: 100% !important;
+        box-shadow: none !important;
+        margin: 0 !important;
     }
 
-    .sb-item {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        padding: 7px 10px;
-        border-radius: 6px;
-        font-size: 0.86rem;
-        color: #94A3B8;
-        cursor: pointer;
-    }
-
-    .sb-item:hover {
-        background-color: #181E29;
-        color: #FFFFFF;
+    [data-testid="stSidebar"] div.stButton > button:hover {
+        background-color: #181E29 !important;
+        color: #FFFFFF !important;
     }
 
     .upgrade-box {
@@ -98,7 +88,7 @@ st.markdown(
         border: 1px solid #232B39;
         border-radius: 10px;
         padding: 0.85rem;
-        margin-top: 1.5rem;
+        margin-top: 1.2rem;
     }
 
     .progress-bar-bg {
@@ -116,61 +106,65 @@ st.markdown(
         width: 100%;
     }
 
-    /* Top Recent Cards */
-    .recent-card {
-        background: #131722;
-        border: 1px solid #202736;
+    /* Section Cards Grid */
+    .grid-2col {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .grid-3col {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 1rem;
+        margin-top: 1.5rem;
+    }
+
+    .import-card {
+        background: #141822;
+        border: 1px solid #232B3A;
         border-radius: 12px;
-        padding: 0.85rem 1.1rem;
-        cursor: pointer;
-    }
-
-    /* Stacked Pill Buttons */
-    div.stButton > button {
-        background-color: #161A23 !important;
-        color: #D1D5DB !important;
-        border: 1px solid #262E3D !important;
-        border-radius: 9999px !important;
-        font-size: 0.86rem !important;
-        font-weight: 500 !important;
-        padding: 0.4rem 1.1rem !important;
-        display: inline-flex !important;
-        align-items: center !important;
-        margin-bottom: 0.3rem !important;
-    }
-
-    div.stButton > button:hover {
-        background-color: #212836 !important;
-        border-color: #38455B !important;
-        color: #FFFFFF !important;
-    }
-
-    /* Credit Warning Banner */
-    .credit-banner {
+        padding: 1.1rem 1.3rem;
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        align-items: center;
-        margin-top: 1.6rem;
-        margin-bottom: 0.8rem;
-        font-size: 0.86rem;
-        color: #94A3B8;
-    }
-
-    .btn-upgrade-core {
-        background: #0070F3;
-        color: #FFFFFF;
-        border: none;
-        border-radius: 8px;
-        padding: 6px 14px;
-        font-size: 0.84rem;
-        font-weight: 600;
         cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
+        transition: border-color 0.15s;
     }
 
-    /* Replit Custom Input Console */
+    .import-card:hover {
+        border-color: #38455B;
+    }
+
+    .import-card-left {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .project-preview-card {
+        background: #141822;
+        border: 1px solid #232B3A;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .preview-thumb {
+        height: 140px;
+        background: #1C2230;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid #232B3A;
+        font-size: 2rem;
+    }
+
+    .preview-footer {
+        padding: 0.9rem 1.1rem;
+    }
+
+    /* Replit Input Console */
     [data-testid="stForm"] {
         background-color: #141822 !important;
         border: 1px solid #262E3E !important;
@@ -185,17 +179,6 @@ st.markdown(
         border-color: #3B475C !important;
     }
 
-    [data-testid="stForm"] div[data-testid="stTextInput"],
-    [data-testid="stForm"] div[data-testid="stTextInputRootElement"],
-    [data-testid="stForm"] div[data-baseweb="input"],
-    [data-testid="stForm"] div[data-baseweb="base-input"] {
-        border: none !important;
-        outline: none !important;
-        box-shadow: none !important;
-        background: transparent !important;
-        padding: 0 !important;
-    }
-
     [data-testid="stForm"] input {
         background: transparent !important;
         border: none !important;
@@ -206,19 +189,6 @@ st.markdown(
         padding: 0.1rem 0 1rem 0 !important;
     }
 
-    [data-testid="stForm"] input::placeholder {
-        color: #64748B !important;
-    }
-
-    .console-bottom-toolbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        border-top: 1px solid #1C2330;
-        padding-top: 0.5rem;
-    }
-
-    /* Submit arrow button */
     [data-testid="stForm"] button[kind="secondaryFormSubmit"] {
         background: transparent !important;
         border: none !important;
@@ -240,6 +210,14 @@ st.markdown(
         color: #FFFFFF !important;
     }
 
+    .console-bottom-toolbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-top: 1px solid #1C2330;
+        padding-top: 0.5rem;
+    }
+
     /* Chat Messages styling */
     [data-testid="stChatMessage"] {
         background-color: #141822 !important;
@@ -257,22 +235,20 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# Session State Initialization
+# ---------------------------------------------------------
+# State Initializations
+# ---------------------------------------------------------
 if "user_name" not in st.session_state:
     st.session_state.user_name = "Mahesh"
-if "view_mode" not in st.session_state:
-    st.session_state.view_mode = "home"
+if "current_nav" not in st.session_state:
+    st.session_state.current_nav = "Home"
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "html_code" not in st.session_state:
     st.session_state.html_code = ""
 
 def is_design_task(text: str) -> bool:
-    keywords = [
-        "build", "create", "make a website", "make an app",
-        "design", "redesign", "add button", "clone",
-        "dashboard", "html", "css"
-    ]
+    keywords = ["build", "create", "make a website", "make an app", "design", "redesign", "add button", "clone", "dashboard", "html", "css"]
     return any(k in text.lower() for k in keywords)
 
 def query_gemini(prompt: str, is_design: bool):
@@ -283,29 +259,25 @@ def query_gemini(prompt: str, is_design: bool):
 
     if is_design:
         sys_prompt = (
-            "You are Ciwi, an elite autonomous web-building AI.\n"
-            "1. Give a concise summary of changes in bullet points.\n"
-            "2. Provide complete, responsive standalone HTML/CSS/JS inside a ```html block."
+            "You are Ciwi, an autonomous web-building AI. "
+            "1. Give a concise summary of changes in bullet points. "
+            "2. Provide complete standalone HTML/CSS/JS inside a ```html block."
         )
         context = f"Current App Code:\n{st.session_state.html_code}\n\nTask: {prompt}"
     else:
-        sys_prompt = (
-            "You are Ciwi, a helpful AI assistant. "
-            "Provide concise, friendly conversation. Do NOT output code or HTML."
-        )
+        sys_prompt = "You are Ciwi, a helpful AI assistant. Provide concise, friendly conversation. Do NOT output code or HTML."
         context = prompt
 
     res = client.models.generate_content(
         model="gemini-3-flash-preview",
         contents=context,
-        config=types.GenerateContentConfig(
-            system_instruction=sys_prompt,
-            temperature=0.7,
-        ),
+        config=types.GenerateContentConfig(system_instruction=sys_prompt, temperature=0.7),
     )
     return res.text
 
-# --- Left Sidebar ---
+# ---------------------------------------------------------
+# Left Sidebar Navigation (Section by Section)
+# ---------------------------------------------------------
 with st.sidebar:
     st.markdown(
         """
@@ -316,7 +288,6 @@ with st.sidebar:
                 <span>◫</span>
             </div>
         </div>
-
         <div class="workspace-pill">
             <div style="display:flex; align-items:center; gap:8px;">
                 <span>👤</span>
@@ -324,27 +295,52 @@ with st.sidebar:
             </div>
             <span>▾</span>
         </div>
+        """,
+        unsafe_allow_html=True,
+    )
 
-        <div class="new-btn">
-            <span>+</span>
-            <span>New</span>
-        </div>
+    if st.button("➕  New", key="nav_new"):
+        st.session_state.current_nav = "Home"
+        st.session_state.messages = []
+        st.rerun()
 
-        <div class="sb-item"><span>📥</span> <span>Import</span></div>
-        <div class="sb-item"><span>📁</span> <span>Projects</span></div>
-        <div class="sb-item">
-            <span>⏱️</span> <span>Routines</span> 
-            <span style="background:#19273D; color:#38BDF8; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px; margin-left:auto;">Beta</span>
-        </div>
-        <div class="sb-item"><span>📚</span> <span>Library</span></div>
-        <div class="sb-item"><span>🔌</span> <span>Integrations</span></div>
-        <div class="sb-item"><span>🛡️</span> <span>Security</span></div>
+    if st.button("📥  Import", key="nav_import"):
+        st.session_state.current_nav = "Import"
+        st.rerun()
 
-        <div style="font-size:0.74rem; font-weight:700; color:#64748B; padding:1.2rem 0.4rem 0.3rem 0.4rem;">Recent</div>
-        <div class="sb-item"><span>🗂️</span> <span>Ciwi AI Assistant</span></div>
-        <div class="sb-item"><span>🗂️</span> <span>Fashion Showcase</span></div>
-        <div class="sb-item"><span>🗂️</span> <span>Dine Easy</span></div>
+    if st.button("📁  Projects", key="nav_projects"):
+        st.session_state.current_nav = "Projects"
+        st.rerun()
 
+    if st.button("⏱️  Routines  (Beta)", key="nav_routines"):
+        st.session_state.current_nav = "Routines"
+        st.rerun()
+
+    if st.button("📚  Library", key="nav_library"):
+        st.session_state.current_nav = "Library"
+        st.rerun()
+
+    if st.button("🔌  Integrations", key="nav_integrations"):
+        st.session_state.current_nav = "Integrations"
+        st.rerun()
+
+    if st.button("🛡️  Security", key="nav_security"):
+        st.session_state.current_nav = "Security"
+        st.rerun()
+
+    st.markdown("<div style='font-size:0.74rem; font-weight:700; color:#64748B; padding:1.2rem 0.4rem 0.3rem 0.4rem;'>Recent</div>", unsafe_allow_html=True)
+    if st.button("🗂️  Ciwi AI Assistant", key="rec_ciwi"):
+        st.session_state.current_nav = "Home"
+        st.rerun()
+    if st.button("🗂️  Fashion Showcase", key="rec_fashion"):
+        st.session_state.current_nav = "Home"
+        st.rerun()
+    if st.button("🗂️  Dine Easy", key="rec_dine"):
+        st.session_state.current_nav = "Home"
+        st.rerun()
+
+    st.markdown(
+        """
         <div class="upgrade-box">
             <div style="display:flex; justify-content:space-between; align-items:center;">
                 <div>
@@ -359,12 +355,7 @@ with st.sidebar:
             </div>
             <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
         </div>
-
-        <div style="margin-top:1.2rem;">
-            <div class="sb-item"><span>❔</span> <span>Learn more</span></div>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.8rem 0.4rem 0.2rem 0.4rem; margin-top:0.8rem; border-top:1px solid #1C222E;">
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:1.2rem 0.4rem 0.2rem 0.4rem; border-top:1px solid #1C222E; margin-top:1.2rem;">
             <div style="display:flex; align-items:center; gap:8px; color:#FFFFFF; font-weight:600; font-size:0.88rem;">
                 <span>👤</span>
                 <span>Mahesh</span>
@@ -375,61 +366,25 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-# --- HOME DASHBOARD ---
-if st.session_state.view_mode == "home":
+# ---------------------------------------------------------
+# SECTION 1: HOME (Dashboard + Search Bar + Chat)
+# ---------------------------------------------------------
+if st.session_state.current_nav == "Home":
     clicked_task = None
 
-    # Only show initial hero layout if no conversation has started yet
     if not st.session_state.messages:
         st.markdown('<div style="font-size:0.82rem; font-weight:600; color:#8B949E; margin-bottom:0.75rem;">Recent projects</div>', unsafe_allow_html=True)
         r1, r2, r3 = st.columns(3)
         with r1:
-            st.markdown(
-                """
-                <div class="recent-card">
-                    <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Ciwi AI Assistant</div>
-                    <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 2 minutes ago</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            st.markdown('<div class="import-card"><strong style="color:#FFF;">Ciwi AI Assistant</strong><span style="color:#64748B; font-size:0.76rem;">🔒 · 2m ago</span></div>', unsafe_allow_html=True)
         with r2:
-            st.markdown(
-                """
-                <div class="recent-card">
-                    <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Fashion Showcase</div>
-                    <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 53 minutes ago</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            st.markdown('<div class="import-card"><strong style="color:#FFF;">Fashion Showcase</strong><span style="color:#64748B; font-size:0.76rem;">🔒 · 53m ago</span></div>', unsafe_allow_html=True)
         with r3:
-            st.markdown(
-                """
-                <div class="recent-card">
-                    <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Dine Easy</div>
-                    <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 3 months ago</div>
-                </div>
-                """,
-                unsafe_allow_html=True,
-            )
+            st.markdown('<div class="import-card"><strong style="color:#FFF;">Dine Easy</strong><span style="color:#64748B; font-size:0.76rem;">🔒 · 3mo ago</span></div>', unsafe_allow_html=True)
 
-        st.markdown("<div style='height: 2.4rem;'></div>", unsafe_allow_html=True)
-
-        st.markdown(
-            f'<div style="font-size:2.5rem; font-weight:600; color:#F3F4F6; margin-bottom:1.4rem;">{st.session_state.user_name}, what are we working on today?</div>',
-            unsafe_allow_html=True,
-        )
-
-        st.markdown(
-            """
-            <div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:#8C96A5; margin-bottom:0.75rem;">
-                <span>Suggested for you</span>
-                <span style="cursor:pointer;">⟳</span>
-            </div>
-            """,
-            unsafe_allow_html=True,
-        )
+        st.markdown("<div style='height: 2.2rem;'></div>", unsafe_allow_html=True)
+        st.markdown(f'<div style="font-size:2.5rem; font-weight:600; color:#F3F4F6; margin-bottom:1.4rem;">{st.session_state.user_name}, what are we working on today?</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:0.8rem; color:#8C96A5; margin-bottom:0.75rem;">Suggested for you ⟳</div>', unsafe_allow_html=True)
 
         if st.button("✦  Help me get things done", key="p_help"):
             clicked_task = "Build a productivity dashboard with task organization"
@@ -438,41 +393,33 @@ if st.session_state.view_mode == "home":
         if st.button("📄  Turn my notes into a slide deck", key="p_deck"):
             clicked_task = "Build a presentation slide generator app from user notes"
 
-    # --- CHAT MESSAGES RENDER FIRST (ABOVE SEARCH BAR) ---
+    # Chat Messages rendered ABOVE the search bar
     if st.session_state.messages:
         for msg in st.session_state.messages:
             role = "assistant" if msg["role"] == "model" else "user"
             with st.chat_message(role):
                 st.markdown(msg["text"])
 
-    # Credit Warning Banner directly above input
     st.markdown(
         """
-        <div class="credit-banner">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.6rem; margin-bottom:0.6rem; font-size:0.86rem; color:#94A3B8;">
             <span>You've used up your daily credits. Upgrade to continue.</span>
-            <button class="btn-upgrade-core"><span>+</span> Upgrade to Core</button>
+            <button style="background:#0070F3; color:#FFF; border:none; border-radius:8px; padding:6px 14px; font-weight:600; cursor:pointer;">+ Upgrade to Core</button>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # --- SEARCH CONSOLE (BELOW CHAT MESSAGES) ---
+    # Bottom search console
     with st.form("home_search_form", clear_on_submit=True):
-        typed_input = st.text_input(
-            "Task",
-            placeholder="Start chatting or describe a task...",
-            label_visibility="collapsed",
-            key="home_search_input",
-        )
-
+        typed_input = st.text_input("Task", placeholder="Start chatting or describe a task...", label_visibility="collapsed", key="home_search_input")
         st.markdown(
             """
             <div class="console-bottom-toolbar">
                 <span style="color:#7E8B9D; font-size:1.15rem; cursor:pointer;">+</span>
                 <div style="display:flex; align-items:center; gap:16px; margin-right: 32px;">
                     <div style="display:inline-flex; align-items:center; gap:5px; color:#8E9BAE; font-size:0.82rem; cursor:pointer;">
-                        <span>:::</span>
-                        <span>Free ▾</span>
+                        <span>:::</span> <span>Free ▾</span>
                     </div>
                     <span style="color:#7E8B9D; cursor:pointer; font-size:0.95rem;">🎙️</span>
                 </div>
@@ -480,17 +427,14 @@ if st.session_state.view_mode == "home":
             """,
             unsafe_allow_html=True,
         )
-
         submitted = st.form_submit_button("↑")
 
-    # Execution Handlers
     active_prompt = typed_input if (submitted and typed_input) else clicked_task
     if active_prompt:
         st.session_state.messages.append({"role": "user", "text": active_prompt})
-
         if is_design_task(active_prompt):
-            st.session_state.view_mode = "workspace"
-            with st.spinner("⚡ Autonomous Agent composing application..."):
+            st.session_state.current_nav = "Workspace"
+            with st.spinner("⚡ Composing application..."):
                 reply = query_gemini(active_prompt, is_design=True)
                 if "```html" in reply:
                     st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
@@ -501,17 +445,191 @@ if st.session_state.view_mode == "home":
             with st.spinner("⚡ Responding..."):
                 reply = query_gemini(active_prompt, is_design=False)
                 st.session_state.messages.append({"role": "model", "text": reply})
-
         st.rerun()
 
-# --- WORKSPACE MODE (3rd slide: only for building web apps/UI) ---
-else:
+# ---------------------------------------------------------
+# SECTION 2: IMPORT (/import)
+# ---------------------------------------------------------
+elif st.session_state.current_nav == "Import":
+    st.markdown('<h1 style="font-size:2.2rem; font-weight:700; color:#FFF; margin-bottom:0.4rem;">Import to Replit</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#8B949E; font-size:0.95rem; margin-bottom:1.8rem;">Migrate data, code, and designs from other apps into Replit</p>', unsafe_allow_html=True)
+
+    import_options = [
+        ("GitHub", "Import any repository or existing app. Agent may be less predictable.", "🐙"),
+        ("Bitbucket", "Import a repository or existing app. Agent support may be limited.", "🔷"),
+        ("Figma Design", "Convert your designs into live Apps using Replit Agent", "🎨"),
+        ("Lovable FREE", "Migrate your site to make it production-ready", "🤍"),
+        ("Bolt", "Migrate your prototype to make it production-ready", "⚡"),
+        ("Base44 FREE", "Migrate your site to make it production-ready", "🌐"),
+        ("Vercel FREE", "Migrate your site to make it production-ready", "▲"),
+        ("Spreadsheet", "Create an app from Excel, CSV, or Google Sheets data", "📊"),
+        ("Zip file", "Import from a .zip file.", "📦"),
+        ("Empty", "Start from a completely empty project without Agent setup or scaffolding.", "📄"),
+    ]
+
+    for i in range(0, len(import_options), 2):
+        col1, col2 = st.columns(2)
+        with col1:
+            title, desc, ico = import_options[i]
+            st.markdown(f'<div class="import-card"><div class="import-card-left"><span style="font-size:1.5rem;">{ico}</span><div><div style="font-weight:700; color:#FFF;">{title}</div><div style="font-size:0.78rem; color:#8B949E;">{desc}</div></div></div><span style="color:#64748B;">→</span></div>', unsafe_allow_html=True)
+        if i + 1 < len(import_options):
+            with col2:
+                title, desc, ico = import_options[i+1]
+                st.markdown(f'<div class="import-card"><div class="import-card-left"><span style="font-size:1.5rem;">{ico}</span><div><div style="font-weight:700; color:#FFF;">{title}</div><div style="font-size:0.78rem; color:#8B949E;">{desc}</div></div></div><span style="color:#64748B;">→</span></div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# SECTION 3: PROJECTS (/repls)
+# ---------------------------------------------------------
+elif st.session_state.current_nav == "Projects":
+    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#FFF; margin-bottom:1.2rem;">📁 Projects</h1>', unsafe_allow_html=True)
+    f1, f2, f3, f4 = st.columns([4, 2, 2, 2])
+    with f1:
+        st.text_input("Search projects", placeholder="Search projects...", label_visibility="collapsed")
+    with f2:
+        st.selectbox("Status", ["Any status", "Active", "Archived"], label_visibility="collapsed")
+    with f3:
+        st.selectbox("Artifact", ["Any artifact type", "Website", "Mobile App", "Backend"], label_visibility="collapsed")
+    with f4:
+        st.selectbox("View", ["All projects", "Shared with me"], label_visibility="collapsed")
+
+    p_col1, p_col2, p_col3 = st.columns(3)
+    with p_col1:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">🤖</div><div class="preview-footer"><strong style="color:#FFF;">Ciwi AI Assistant</strong><div style="color:#8B949E; font-size:0.78rem;">🔒 · 25 minutes ago</div></div></div>', unsafe_allow_html=True)
+    with p_col2:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">👗</div><div class="preview-footer"><strong style="color:#FFF;">Fashion Showcase</strong><div style="color:#8B949E; font-size:0.78rem;">🔒 · 1 hour ago</div></div></div>', unsafe_allow_html=True)
+    with p_col3:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">☕</div><div class="preview-footer"><strong style="color:#FFF;">Dine Easy</strong><div style="color:#8B949E; font-size:0.78rem;">🔒 · 1 hour ago</div></div></div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# SECTION 4: ROUTINES (/routines)
+# ---------------------------------------------------------
+elif st.session_state.current_nav == "Routines":
+    st.markdown('<h1 style="font-size:2.2rem; font-weight:700; color:#FFF; margin-bottom:0.2rem;">⏱️ Routines <span style="background:#19273D; color:#38BDF8; font-size:0.8rem; padding:2px 8px; border-radius:4px;">Beta</span></h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#8B949E; font-size:0.92rem;">Run Replit on a schedule</p>', unsafe_allow_html=True)
+    st.markdown('<h4 style="color:#FFF; margin-top:2rem;">Put recurring work on autopilot</h4>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#8B949E; font-size:0.88rem; margin-bottom:1.4rem;">Upgrade to Replit Core to schedule Agent tasks that run for you, even when you are away.</p>', unsafe_allow_html=True)
+
+    routines_list = [
+        ("📅 Check my calendar each morning and tell me what to prepare for", "↗"),
+        ("✉️ Go through my inbox every couple of days and pull out emails that need a reply", "↗"),
+        ("💬 Catch me up every Friday on the Slack messages I missed", "↗"),
+        ("⏰ Schedule a custom routine that...", "↗")
+    ]
+    for text, arr in routines_list:
+        st.markdown(f'<div class="import-card" style="margin-bottom:0.8rem;"><span style="color:#E2E8F0; font-size:0.9rem;">{text}</span><span style="color:#64748B;">{arr}</span></div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# SECTION 5: LIBRARY (/library)
+# ---------------------------------------------------------
+elif st.session_state.current_nav == "Library":
+    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#FFF; margin-bottom:0.2rem;">📚 Library</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#8B949E; font-size:0.92rem; margin-bottom:1.5rem;">Everything Replit has made across your projects</p>', unsafe_allow_html=True)
+    l1, l2, l3 = st.columns([5, 2, 2])
+    with l1:
+        st.text_input("Search artifacts", placeholder="Search artifacts and assets", label_visibility="collapsed")
+    with l2:
+        st.selectbox("Type", ["Any type", "Code", "Components"], label_visibility="collapsed")
+    with l3:
+        st.selectbox("File", ["Any file type", "HTML", "JSON"], label_visibility="collapsed")
+
+    lib1, lib2, lib3 = st.columns(3)
+    with lib1:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">💻</div><div class="preview-footer"><strong style="color:#FFF;">Ciwi AI Assistant</strong><div style="color:#8B949E; font-size:0.75rem;">Website · 35m ago</div></div></div>', unsafe_allow_html=True)
+    with lib2:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">🖼️</div><div class="preview-footer"><strong style="color:#FFF;">Aster Row</strong><div style="color:#8B949E; font-size:0.75rem;">Website · 1h ago</div></div></div>', unsafe_allow_html=True)
+    with lib3:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">☕</div><div class="preview-footer"><strong style="color:#FFF;">Bean Board - Bheemili</strong><div style="color:#8B949E; font-size:0.75rem;">Website · 1h ago</div></div></div>', unsafe_allow_html=True)
+
+# ---------------------------------------------------------
+# SECTION 6: INTEGRATIONS & SETTINGS MODAL
+# ---------------------------------------------------------
+elif st.session_state.current_nav == "Integrations":
+    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#FFF; margin-bottom:0.4rem;">⚙️ Settings & Integrations</h1>', unsafe_allow_html=True)
+    tab_int, tab_custom = st.tabs(["🔌 Connected Integrations", "🧠 Customization & Memory"])
+
+    with tab_int:
+        st.markdown('<p style="color:#8B949E; font-size:0.9rem; margin-bottom:1.2rem;">Connect your favorite services for seamless workspace syncing.</p>', unsafe_allow_html=True)
+        integrations_data = [
+            ("Google Docs", "Connect to create, read, and update documents.", "📄"),
+            ("Google Drive", "Connect to Google Drive to manage files.", "💾"),
+            ("Google Sheets", "Read, write, and modify spreadsheet data via REST API.", "📊"),
+            ("HubSpot", "Manage contacts, deals, and marketing campaigns.", "🎯"),
+            ("Intercom", "Manage users and conversations in Intercom.", "💬"),
+            ("Jira", "Issue tracking, project boards, and sprint logs.", "🔷"),
+            ("Linear", "Query issues, cycles, and manage tracking via GraphQL.", "🟣"),
+            ("Mailchimp", "Manage subscriber lists and campaigns.", "🐒"),
+            ("Dropbox", "Sync files, assets, and backups.", "📦"),
+        ]
+        for idx in range(0, len(integrations_data), 3):
+            ic1, ic2, ic3 = st.columns(3)
+            with ic1:
+                t, d, ico = integrations_data[idx]
+                st.markdown(f'<div class="import-card"><div><span style="font-size:1.4rem;">{ico}</span><div style="font-weight:700; color:#FFF; margin-top:6px;">{t}</div><div style="font-size:0.76rem; color:#8B949E; margin-bottom:8px;">{d}</div><button style="background:#1E2636; border:1px solid #2B3547; color:#FFF; border-radius:6px; padding:3px 10px; font-size:0.75rem;">Sign in</button></div></div>', unsafe_allow_html=True)
+            if idx + 1 < len(integrations_data):
+                with ic2:
+                    t, d, ico = integrations_data[idx+1]
+                    st.markdown(f'<div class="import-card"><div><span style="font-size:1.4rem;">{ico}</span><div style="font-weight:700; color:#FFF; margin-top:6px;">{t}</div><div style="font-size:0.76rem; color:#8B949E; margin-bottom:8px;">{d}</div><button style="background:#1E2636; border:1px solid #2B3547; color:#FFF; border-radius:6px; padding:3px 10px; font-size:0.75rem;">Sign in</button></div></div>', unsafe_allow_html=True)
+            if idx + 2 < len(integrations_data):
+                with ic3:
+                    t, d, ico = integrations_data[idx+2]
+                    st.markdown(f'<div class="import-card"><div><span style="font-size:1.4rem;">{ico}</span><div style="font-weight:700; color:#FFF; margin-top:6px;">{t}</div><div style="font-size:0.76rem; color:#8B949E; margin-bottom:8px;">{d}</div><button style="background:#1E2636; border:1px solid #2B3547; color:#FFF; border-radius:6px; padding:3px 10px; font-size:0.75rem;">Sign in</button></div></div>', unsafe_allow_html=True)
+
+    with tab_custom:
+        st.markdown(
+            """
+            <div style="background:#141822; border:1px solid #232B3A; border-radius:12px; padding:1.4rem; margin-top:1rem;">
+                <h4 style="color:#FFF; margin:0 0 6px 0;">Agent remembers what matters to you</h4>
+                <p style="color:#8B949E; font-size:0.86rem; margin-bottom:1.5rem;">As you work, Agent saves a short summary of your preferences and uses it across all projects and chats.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+                    <div>
+                        <strong style="color:#FFF; font-size:0.9rem;">Memory</strong>
+                        <div style="font-size:0.78rem; color:#8B949E;">Control whether Agent remembers your preferences in this workspace.</div>
+                    </div>
+                    <input type="checkbox" checked style="transform:scale(1.3);" />
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.4rem;">
+                    <div>
+                        <strong style="color:#FFF; font-size:0.9rem;">Memory in shared projects</strong>
+                        <div style="font-size:0.78rem; color:#8B949E;">Control whether Agent uses your preferences in collaborative projects.</div>
+                    </div>
+                    <input type="checkbox" style="transform:scale(1.3);" />
+                </div>
+                <label style="font-size:0.84rem; font-weight:600; color:#CBD5E1;">What Agent remembers</label>
+                <textarea style="width:100%; height:120px; background:#0E1117; border:1px solid #262E3E; border-radius:8px; color:#FFF; padding:10px; font-size:0.88rem; outline:none; margin-top:6px;" placeholder="Write what Agent should remember about you..."></textarea>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+# ---------------------------------------------------------
+# SECTION 7: SECURITY (/security)
+# ---------------------------------------------------------
+elif st.session_state.current_nav == "Security":
+    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#FFF; margin-bottom:0.4rem;">🛡️ Security Center</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#8B949E; font-size:0.9rem; margin-bottom:1.5rem;">Automated vulnerability testing, secrets protection, and static code analysis.</p>', unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="import-card" style="margin-bottom:1.2rem;">
+            <div>
+                <strong style="color:#FFF; font-size:1rem;">Run a deep security scan</strong>
+                <p style="color:#8B949E; font-size:0.84rem; margin:4px 0 10px 0;">Security Agent combines LLMs with leading static analysis tools to deliver a pen-test-grade report.</p>
+                <button style="background:#0070F3; color:#FFF; border:none; border-radius:6px; padding:6px 14px; font-weight:600; cursor:pointer;">Run scan with Agent</button>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# ---------------------------------------------------------
+# SECTION 8: 2-COLUMN BUILD WORKSPACE
+# ---------------------------------------------------------
+elif st.session_state.current_nav == "Workspace":
     top_c1, top_c2 = st.columns([7, 3])
     with top_c1:
         st.markdown("### 📁 Ciwi AI Assistant · Live Build")
     with top_c2:
         if st.button("← Back to Home"):
-            st.session_state.view_mode = "home"
+            st.session_state.current_nav = "Home"
             st.rerun()
 
     c_chat, c_prev = st.columns([1, 1], gap="medium")
