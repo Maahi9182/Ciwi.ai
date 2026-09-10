@@ -14,7 +14,6 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* Dark background and glow */
     html, body, [data-testid="stAppViewContainer"], .main {
         background-color: #0E1117 !important;
         background-image: radial-gradient(ellipse 70% 40% at 50% 88%, rgba(160, 55, 20, 0.28) 0%, rgba(14, 17, 23, 0) 75%) !important;
@@ -33,6 +32,13 @@ st.markdown(
         padding-top: 4.5rem !important;
         padding-bottom: 4rem !important;
         margin: 0 auto !important;
+    }
+
+    /* Workspace mode full width */
+    .workspace-mode .main .block-container {
+        max-width: 100% !important;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
     }
 
     /* Sidebar container */
@@ -127,7 +133,7 @@ st.markdown(
         justify-content: space-between;
     }
 
-    /* Fixed Pill Buttons (Overriding default white backgrounds) */
+    /* Pill buttons */
     div.stButton > button {
         background-color: #1A1E27 !important;
         color: #E2E8F0 !important;
@@ -150,7 +156,7 @@ st.markdown(
         color: #FFFFFF !important;
     }
 
-    /* Console form */
+    /* Form console */
     [data-testid="stForm"] {
         background-color: #161A23 !important;
         border: 1px solid #252D3C !important;
@@ -206,7 +212,6 @@ st.markdown(
         cursor: pointer;
     }
 
-    /* Arrow button */
     [data-testid="stForm"] button[kind="secondaryFormSubmit"] {
         background: transparent !important;
         border: none !important;
@@ -223,12 +228,43 @@ st.markdown(
     [data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
         color: #FFFFFF !important;
     }
+
+    /* Live Sandbox Shell */
+    .sandbox-shell {
+        background-color: #12151D;
+        border: 1px solid #232B39;
+        border-radius: 14px;
+        overflow: hidden;
+        height: 80vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .sandbox-header {
+        background-color: #181E29;
+        border-bottom: 1px solid #232B39;
+        padding: 0.5rem 0.8rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .sandbox-url {
+        background: #0E1117;
+        border: 1px solid #232B39;
+        border-radius: 6px;
+        padding: 3px 10px;
+        font-size: 0.78rem;
+        color: #94A3B8;
+        flex-grow: 1;
+        font-family: monospace;
+    }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# Session state initialization
+# State initialization
 if "user_name" not in st.session_state:
     st.session_state.user_name = "Mahesh"
 if "view_mode" not in st.session_state:
@@ -236,9 +272,59 @@ if "view_mode" not in st.session_state:
 if "messages" not in st.session_state:
     st.session_state.messages = []
 if "html_code" not in st.session_state:
-    st.session_state.html_code = ""
+    st.session_state.html_code = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="utf-8">
+      <style>
+        body { font-family: -apple-system, sans-serif; background: #FFF8ED; color: #5C2318; padding: 2rem; text-align: center; }
+        .card { background: white; border-radius: 12px; padding: 2rem; max-width: 380px; margin: 0 auto; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
+        h1 { color: #28B4C4; margin-bottom: 0.5rem; }
+        button { background: #28B4C4; color: white; border: none; padding: 0.8rem 1.4rem; border-radius: 8px; font-weight: bold; cursor: pointer; }
+      </style>
+    </head>
+    <body>
+      <div class="card">
+        <h1>Dine Easy</h1>
+        <p>Your interactive restaurant workspace preview.</p>
+        <button onclick="alert('Ready to build!')">Get Started</button>
+      </div>
+    </body>
+    </html>
+    """
 
-# --- Sidebar UI ---
+# Agent helper function
+def query_agent(prompt: str):
+    api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
+    if not api_key:
+        return "Missing GEMINI_API_KEY in Secrets."
+
+    client = genai.Client(api_key=api_key)
+
+    system_prompt = (
+        "You are Ciwi, an elite autonomous web development AI identical to Replit Agent. "
+        "User context: The current user is Mahesh. "
+        "Guidelines:\n"
+        "1. If the user says a conversational greeting (e.g. 'hi', 'hello', 'hey', 'who are you', 'how are you'), "
+        "reply warmly and concisely as an AI agent ready to build software. Do NOT write HTML or code for greetings.\n"
+        "2. If the user asks to create, modify, build, or fix a web app/feature, explain your changes in 2-3 clean bullet points, "
+        "and provide the complete standalone code strictly within a ```html ``` block."
+    )
+
+    full_context = f"Current App Code:\n{st.session_state.html_code}\n\nUser request: {prompt}"
+
+    response = client.models.generate_content(
+        model="gemini-3-flash-preview",
+        contents=full_context,
+        config=types.GenerateContentConfig(
+            system_instruction=system_prompt,
+            temperature=0.7,
+        ),
+    )
+    return response.text
+
+# --- Left Sidebar ---
 with st.sidebar:
     st.markdown(
         """
@@ -297,7 +383,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-# --- Main View ---
+# --- Home View ---
 if st.session_state.view_mode == "home":
     st.markdown(
         f'<div style="font-size:2.45rem; font-weight:600; color:#F3F4F6; margin-bottom:1.4rem;">{st.session_state.user_name}, what are we working on today?</div>',
@@ -348,66 +434,90 @@ if st.session_state.view_mode == "home":
             submitted = st.form_submit_button("↑")
 
     active_prompt = prompt_val if (submitted and prompt_val) else clicked_task
+
     if active_prompt:
-        api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
-        if not api_key:
-            st.error("Missing GEMINI_API_KEY in Secrets.")
-        else:
-            client = genai.Client(api_key=api_key)
-            st.session_state.view_mode = "workspace"
-            st.session_state.messages.append({"role": "user", "parts": [{"text": active_prompt}]})
+        st.session_state.view_mode = "workspace"
+        st.session_state.messages.append({"role": "user", "text": active_prompt})
 
-            with st.spinner("⚡ Ciwi Agent generating workspace..."):
-                res = client.models.generate_content(
-                    model="gemini-3-flash-preview",
-                    contents=(
-                        f"Build an interactive web application for: '{active_prompt}'.\n"
-                        "1. Summary of design tokens.\n"
-                        "2. Return complete code inside a ```html ``` block."
-                    ),
-                )
-                output = res.text
-                if "```html" in output:
-                    st.session_state.html_code = output.split("```html")[1].split("```")[0].strip()
-                st.session_state.messages.append({"role": "model", "parts": [{"text": output}]})
-                st.rerun()
+        with st.spinner("⚡ Ciwi Agent thinking..."):
+            reply = query_agent(active_prompt)
 
+            # Separate code from chat text
+            if "```html" in reply:
+                parts = reply.split("```html")
+                chat_text = parts[0].strip()
+                code_text = parts[1].split("```")[0].strip()
+                st.session_state.html_code = code_text
+                st.session_state.messages.append({
+                    "role": "model",
+                    "text": chat_text if chat_text else "I've generated and deployed the application to your right preview panel."
+                })
+            else:
+                st.session_state.messages.append({"role": "model", "text": reply})
+
+        st.rerun()
+
+# --- 2-Column Split Workspace ---
 else:
-    # 2-Column Live Workspace
-    top_col1, top_col2 = st.columns([6, 4])
+    top_col1, top_col2 = st.columns([7, 3])
     with top_col1:
-        st.markdown("### 📁 Active Build · Dine Easy")
+        st.markdown(
+            """
+            <div style="display:flex; align-items:center; gap:12px; margin-bottom: 0.6rem;">
+                <span style="background:#181E28; border:1px solid #232B39; padding:4px 10px; border-radius:6px; font-weight:700; font-size:0.85rem; color:#FFF;">📁 Dine Easy ▾</span>
+                <span style="color:#94A3B8; font-size:0.82rem; font-weight:600;">Design</span>
+                <span style="color:#F26522; font-size:0.82rem; font-weight:700; border-bottom:2px solid #F26522;">Build</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
     with top_col2:
-        if st.button("← Back to Home"):
+        if st.button("← Back to Home", use_container_width=True):
             st.session_state.view_mode = "home"
             st.rerun()
 
     c_chat, c_prev = st.columns([1, 1], gap="medium")
+
+    # Left: Agent Chat
     with c_chat:
         chat_box = st.container(height=520)
         with chat_box:
             for m in st.session_state.messages:
                 role = "assistant" if m["role"] == "model" else "user"
                 with st.chat_message(role):
-                    st.markdown(m["parts"][0]["text"])
+                    st.markdown(m["text"])
 
         if follow_up := st.chat_input("Message Agent..."):
-            st.session_state.messages.append({"role": "user", "parts": [{"text": follow_up}]})
-            api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
-            client = genai.Client(api_key=api_key)
-            with st.spinner("⚡ Updating application..."):
-                res = client.models.generate_content(
-                    model="gemini-3-flash-preview",
-                    contents=(
-                        f"Current code:\n{st.session_state.html_code}\n\n"
-                        f"Request: {follow_up}\n"
-                        "Return code in ```html ``` block."
-                    ),
-                )
-                if "```html" in res.text:
-                    st.session_state.html_code = res.text.split("```html")[1].split("```")[0].strip()
-                st.session_state.messages.append({"role": "model", "parts": [{"text": res.text}]})
-                st.rerun()
+            st.session_state.messages.append({"role": "user", "text": follow_up})
+            with st.spinner("⚡ Ciwi Agent responding..."):
+                reply = query_agent(follow_up)
 
+                if "```html" in reply:
+                    parts = reply.split("```html")
+                    chat_text = parts[0].strip()
+                    code_text = parts[1].split("```")[0].strip()
+                    st.session_state.html_code = code_text
+                    st.session_state.messages.append({
+                        "role": "model",
+                        "text": chat_text if chat_text else "Updated application deployed to live preview."
+                    })
+                else:
+                    st.session_state.messages.append({"role": "model", "text": reply})
+
+            st.rerun()
+
+    # Right: Browser Viewport
     with c_prev:
-        components.html(st.session_state.html_code, height=560, scrolling=True)
+        st.markdown(
+            """
+            <div class="sandbox-shell">
+                <div class="sandbox-header">
+                    <span style="background:#0E1117; border:1px solid #232B39; border-radius:6px; padding:2px 8px; font-size:0.75rem; color:#CBD5E1;">Dine Easy ✕</span>
+                    <div class="sandbox-url">https://ciwi.replit.dev/dine-easy</div>
+                    <span style="color:#8B949E; font-size:0.8rem; cursor:pointer;">⟳</span>
+                </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        components.html(st.session_state.html_code, height=520, scrolling=True)
+        st.markdown("</div>", unsafe_allow_html=True)
