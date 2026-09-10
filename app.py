@@ -178,6 +178,7 @@ st.markdown(
         border-radius: 14px !important;
         padding: 0.85rem 1.1rem 0.65rem 1.1rem !important;
         box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5) !important;
+        position: relative !important;
     }
 
     [data-testid="stForm"]:focus-within {
@@ -195,6 +196,7 @@ st.markdown(
         padding: 0 !important;
     }
 
+    /* Ensure user typed text is clearly visible */
     [data-testid="stForm"] input {
         background: transparent !important;
         border: none !important;
@@ -217,7 +219,7 @@ st.markdown(
         padding-top: 0.5rem;
     }
 
-    /* Replit Arrow Submit Button */
+    /* Submit arrow button aligned in bottom right */
     [data-testid="stForm"] button[kind="secondaryFormSubmit"] {
         background: transparent !important;
         border: none !important;
@@ -229,6 +231,10 @@ st.markdown(
         width: 24px !important;
         height: 24px !important;
         box-shadow: none !important;
+        position: absolute !important;
+        right: 1.2rem !important;
+        bottom: 0.75rem !important;
+        z-index: 10 !important;
     }
 
     [data-testid="stForm"] button[kind="secondaryFormSubmit"]:hover {
@@ -280,7 +286,7 @@ def query_gemini(prompt: str, is_design: bool):
         sys_prompt = (
             "You are Ciwi, an elite autonomous web-building AI.\n"
             "1. Give a concise summary of changes in bullet points.\n"
-            "2. Provide complete, responsive standalone HTML/CSS/JS inside a ```html code block."
+            "2. Provide complete, responsive standalone HTML/CSS/JS inside a ```html block."
         )
         context = f"Current App Code:\n{st.session_state.html_code}\n\nTask: {prompt}"
     else:
@@ -440,18 +446,20 @@ if st.session_state.view_mode == "home":
         unsafe_allow_html=True,
     )
 
-    with st.form("home_search_form", clear_on_submit=False):
+    # 6. Replit Search Form: Single-input form with active Enter listener
+    with st.form("home_search_form", clear_on_submit=True):
         typed_input = st.text_input(
             "Task",
             placeholder="Start chatting or describe a task...",
             label_visibility="collapsed",
+            key="home_search_input",
         )
 
         st.markdown(
             """
             <div class="console-bottom-toolbar">
                 <span style="color:#7E8B9D; font-size:1.15rem; cursor:pointer;">+</span>
-                <div style="display:flex; align-items:center; gap:16px;">
+                <div style="display:flex; align-items:center; gap:16px; margin-right: 32px;">
                     <div style="display:inline-flex; align-items:center; gap:5px; color:#8E9BAE; font-size:0.82rem; cursor:pointer;">
                         <span>:::</span>
                         <span>Free ▾</span>
@@ -463,11 +471,9 @@ if st.session_state.view_mode == "home":
             unsafe_allow_html=True,
         )
 
-        col_space, col_send = st.columns([15, 1])
-        with col_send:
-            submitted = st.form_submit_button("↑")
+        submitted = st.form_submit_button("↑")
 
-    # Display conversation messages above the prompt bar
+    # Display ongoing chat above the search bar
     if st.session_state.messages:
         st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
         for msg in st.session_state.messages:
@@ -475,6 +481,7 @@ if st.session_state.view_mode == "home":
             with st.chat_message(role):
                 st.markdown(msg["text"])
 
+    # Submission logic: detects Enter key or arrow click
     active_prompt = typed_input if (submitted and typed_input) else clicked_task
     if active_prompt:
         st.session_state.messages.append({"role": "user", "text": active_prompt})
@@ -495,6 +502,7 @@ if st.session_state.view_mode == "home":
 
         st.rerun()
 
+# --- WORKSPACE MODE (2-column layout when building) ---
 else:
     top_c1, top_c2 = st.columns([7, 3])
     with top_c1:
