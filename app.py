@@ -274,6 +274,84 @@ def query_gemini(prompt: str, is_design: bool):
 
     if is_design:
         sys_prompt = (
-            "You are Ciwi, an elite autonomous web-building AI. "
-            "1. Give a concise summary of changes in bullet points. "
-            "2. Provide complete, responsive standalone HTML/CSS/JS inside a ```html
+            "You are Ciwi, an elite autonomous web-building AI.\n"
+            "1. Give a concise summary of changes in bullet points.\n"
+            "2. Provide complete, responsive standalone HTML/CSS/JS inside a ```html code block."
+        )
+        context = f"Current App Code:\n{st.session_state.html_code}\n\nTask: {prompt}"
+    else:
+        sys_prompt = "You are Ciwi, a helpful AI assistant. Provide concise, friendly conversation. Do NOT output code or HTML."
+        context = prompt
+
+    res = client.models.generate_content(
+        model="gemini-3-flash-preview",
+        contents=context,
+        config=types.GenerateContentConfig(system_instruction=sys_prompt, temperature=0.7),
+    )
+    return res.text
+
+# --- Sidebar ---
+with st.sidebar:
+    st.markdown(
+        """
+        <div class="sb-header">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="#F26522"><path d="M4 4h6v6H4zm10 0h6v6h-6zM4 14h6v6H4z"/></svg>
+            <div style="display:flex; gap:12px; color:#8B949E; font-size: 0.95rem;">
+                <span>🔍</span>
+                <span>◫</span>
+            </div>
+        </div>
+
+        <div class="workspace-pill">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span>👤</span>
+                <span>Personal workspace</span>
+            </div>
+            <span>▾</span>
+        </div>
+
+        <div class="new-btn">
+            <span>+</span>
+            <span>New</span>
+        </div>
+
+        <div class="sb-item"><span>📥</span> <span>Import</span></div>
+        <div class="sb-item"><span>📁</span> <span>Projects</span></div>
+        <div class="sb-item">
+            <span>⏱️</span> <span>Routines</span> 
+            <span style="background:#19273D; color:#38BDF8; font-size:0.68rem; font-weight:700; padding:1px 6px; border-radius:4px; margin-left:auto;">Beta</span>
+        </div>
+        <div class="sb-item"><span>📚</span> <span>Library</span></div>
+        <div class="sb-item"><span>🔌</span> <span>Integrations</span></div>
+        <div class="sb-item"><span>🛡️</span> <span>Security</span></div>
+
+        <div style="font-size:0.74rem; font-weight:700; color:#64748B; padding:1.2rem 0.4rem 0.3rem 0.4rem;">Recent</div>
+        <div class="sb-item"><span>🗂️</span> <span>Ciwi AI Assistant</span></div>
+        <div class="sb-item"><span>🗂️</span> <span>Fashion Showcase</span></div>
+        <div class="sb-item"><span>🗂️</span> <span>Dine Easy</span></div>
+
+        <div class="upgrade-box">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-size:0.84rem; font-weight:700; color:#FFFFFF;">Upgrade your plan</div>
+                    <div style="font-size:0.72rem; color:#8B949E; margin-top:2px;">Unlock more credits</div>
+                </div>
+                <div style="background:#0070F3; border-radius:6px; width:26px; height:26px; display:flex; align-items:center; justify-content:center; color:#FFF; font-weight:700;">+</div>
+            </div>
+            <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#8B949E; margin-top:8px;">
+                <span>Free allowance</span>
+                <span>100% used</span>
+            </div>
+            <div class="progress-bar-bg"><div class="progress-bar-fill"></div></div>
+        </div>
+
+        <div style="margin-top:1.2rem;">
+            <div class="sb-item"><span>❔</span> <span>Learn more</span></div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; padding:0.8rem 0.4rem 0.2rem 0.4rem; margin-top:0.8rem; border-top:1px solid #1C222E;">
+            <div style="display:flex; align-items:center; gap:8px; color:#FFFFFF; font-weight:600; font-size:0.88rem;">
+                <span>👤</span>
+                <span>Mahesh</span>
+            </div>
+            <span style="color:#
