@@ -5,14 +5,14 @@ from google import genai
 from google.genai import types
 
 st.set_page_config(
-    page_title="Ciwi Agent",
+    page_title="Replit - Workspace",
     page_icon="⚡",
     layout="wide",
     initial_sidebar_state="expanded",
 )
 
 # ---------------------------------------------------------
-# Replit Workspace Precise CSS
+# Exact Replit Dark Aesthetic CSS
 # ---------------------------------------------------------
 st.markdown(
     """
@@ -20,8 +20,8 @@ st.markdown(
     /* Global Base */
     html, body, [data-testid="stAppViewContainer"], .main {
         background-color: #0E1117 !important;
-        color: #EDEDED !important;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #F0F6FC !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
         overflow-x: hidden;
     }
 
@@ -31,192 +31,268 @@ st.markdown(
 
     .main .block-container {
         max-width: 100% !important;
-        padding: 0.6rem 1rem 0.8rem 1rem !important;
+        padding: 1.5rem 2.5rem 2rem 2.5rem !important;
     }
 
-    /* Left Sidebar */
+    /* Sidebar Exact Clone */
     [data-testid="stSidebar"] {
-        background-color: #12151C !important;
-        border-right: 1px solid #1F242D !important;
+        background-color: #12161F !important;
+        border-right: 1px solid #1C2331 !important;
         padding-top: 0.8rem !important;
     }
 
-    .sb-brand {
+    [data-testid="stSidebar"] * {
+        color: #94A3B8 !important;
+    }
+
+    .sb-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.2rem 0.6rem 1rem 0.6rem;
+    }
+
+    .sb-logo {
         display: flex;
         align-items: center;
-        gap: 0.6rem;
-        font-size: 1.25rem;
-        font-weight: 800;
-        color: #FFFFFF !important;
-        margin-bottom: 1rem;
+        gap: 6px;
     }
 
-    .sb-brand-icon {
-        color: #F26522 !important;
-        font-size: 1.35rem;
+    .sb-logo svg {
+        width: 22px;
+        height: 22px;
+        fill: #F26522;
     }
 
-    .workspace-select {
-        background: #181D26;
-        border: 1px solid #28303E;
+    .workspace-pill {
+        background: #181E29;
+        border: 1px solid #252F42;
         border-radius: 8px;
         padding: 0.5rem 0.75rem;
         display: flex;
-        justify-content: space-between;
         align-items: center;
-        font-size: 0.86rem;
+        justify-content: space-between;
+        color: #E2E8F0 !important;
+        font-size: 0.88rem;
         font-weight: 600;
-        color: #CBD5E1;
         margin-bottom: 1.2rem;
     }
 
-    .nav-btn {
+    .sb-nav-item {
         display: flex;
         align-items: center;
         gap: 0.75rem;
-        padding: 0.42rem 0.6rem;
+        padding: 0.45rem 0.65rem;
         border-radius: 6px;
         font-size: 0.88rem;
-        color: #94A3B8;
+        color: #94A3B8 !important;
         text-decoration: none;
         margin-bottom: 2px;
-        transition: background 0.15s;
     }
 
-    .nav-btn:hover, .nav-btn.active {
-        background: #1C222C;
-        color: #FFFFFF;
+    .sb-nav-item:hover {
+        background: #1B2230;
+        color: #FFFFFF !important;
     }
 
-    .recent-header {
+    .beta-tag {
+        background: #1E283A;
+        color: #60A5FA !important;
+        font-size: 0.7rem;
+        font-weight: 700;
+        padding: 1px 6px;
+        border-radius: 4px;
+        margin-left: auto;
+    }
+
+    .sb-recent-title {
         font-size: 0.72rem;
         font-weight: 700;
-        letter-spacing: 0.05em;
-        color: #64748B;
-        margin: 1.4rem 0 0.4rem 0.4rem;
+        color: #64748B !important;
+        margin: 1.6rem 0 0.5rem 0.6rem;
+        letter-spacing: 0.04em;
     }
 
     .upgrade-card {
-        background: #161B23;
-        border: 1px solid #262F3E;
+        background: #151B26;
+        border: 1px solid #232E42;
         border-radius: 10px;
-        padding: 0.8rem 0.9rem;
-        margin-top: 2rem;
+        padding: 0.85rem;
+        margin-top: 2.2rem;
         display: flex;
         align-items: center;
         justify-content: space-between;
     }
 
-    /* Top Workspace Header */
-    .top-bar-left {
+    .upgrade-btn-plus {
+        background: #0070F3;
+        color: #FFFFFF !important;
+        width: 28px;
+        height: 28px;
+        border-radius: 6px;
         display: flex;
         align-items: center;
-        gap: 14px;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.1rem;
     }
 
-    .proj-title-pill {
+    .user-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem 0.5rem 0.5rem 0.5rem;
+        margin-top: 1rem;
+        border-top: 1px solid #1C2331;
+    }
+
+    /* Main Center Hero */
+    .recent-header-text {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #94A3B8;
+        margin-bottom: 0.8rem;
+    }
+
+    .recent-cards-row {
+        display: flex;
+        gap: 1rem;
+        margin-bottom: 4.5rem;
+    }
+
+    .project-card {
+        background: #131722;
+        border: 1px solid #202736;
+        border-radius: 12px;
+        padding: 1rem 1.4rem;
+        width: 220px;
+        transition: border-color 0.2s;
+        cursor: pointer;
+    }
+
+    .project-card:hover {
+        border-color: #35425C;
+    }
+
+    .project-card-title {
+        font-size: 0.92rem;
+        font-weight: 600;
+        color: #FFFFFF;
+        margin-bottom: 0.35rem;
+    }
+
+    .project-card-sub {
+        font-size: 0.78rem;
+        color: #64748B;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* Radial Ambient Background Glow */
+    .hero-glow-container {
+        position: relative;
+        text-align: left;
+        max-width: 820px;
+        margin: 0 auto;
+        padding-top: 2rem;
+    }
+
+    .hero-glow-bg {
+        position: absolute;
+        width: 700px;
+        height: 350px;
+        bottom: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: radial-gradient(ellipse at center, rgba(168, 60, 20, 0.22) 0%, rgba(14, 17, 23, 0) 70%);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .hero-headline {
+        font-size: 2.7rem;
+        font-weight: 700;
+        letter-spacing: -0.03em;
+        color: #F8FAFC;
+        margin-bottom: 1.6rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .suggested-label {
+        font-size: 0.8rem;
+        color: #8B949E;
+        margin-bottom: 0.75rem;
         display: flex;
         align-items: center;
         gap: 6px;
-        background: #181D26;
-        border: 1px solid #28303E;
-        border-radius: 8px;
-        padding: 5px 12px;
-        font-size: 0.88rem;
-        font-weight: 700;
-        color: #FFFFFF;
+        position: relative;
+        z-index: 1;
     }
 
-    .mode-tab {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: #94A3B8;
-        cursor: pointer;
-        padding: 2px 4px;
+    .suggestion-pills {
+        display: flex;
+        gap: 0.6rem;
+        margin-bottom: 1.5rem;
+        position: relative;
+        z-index: 1;
     }
 
-    .mode-tab.active {
-        color: #F26522;
-        border-bottom: 2px solid #F26522;
-    }
-
-    /* Action Buttons */
+    /* Streamlit Buttons into Clean Dark Pills */
     div.stButton > button {
-        background-color: #181D26 !important;
-        color: #E2E8F0 !important;
-        border: 1px solid #28303E !important;
+        background-color: #171B24 !important;
+        color: #D1D5DB !important;
+        border: 1px solid #262E3D !important;
         border-radius: 8px !important;
-        font-size: 0.84rem !important;
-        font-weight: 600 !important;
-        padding: 0.35rem 0.75rem !important;
+        font-size: 0.86rem !important;
+        font-weight: 500 !important;
+        padding: 0.4rem 0.85rem !important;
     }
 
     div.stButton > button:hover {
-        background-color: #242B38 !important;
-        border-color: #3D485C !important;
+        background-color: #212836 !important;
+        border-color: #3B475C !important;
         color: #FFFFFF !important;
     }
 
-    .publish-box div.stButton > button {
-        background-color: #0070F3 !important;
+    /* Prompt Input Capsule */
+    [data-testid="stChatInput"] {
+        background-color: #151922 !important;
+        border: 1.5px solid #262E3E !important;
+        border-radius: 14px !important;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45) !important;
+        position: relative;
+        z-index: 2;
+    }
+
+    [data-testid="stChatInput"]:focus-within {
+        border-color: #F26522 !important;
+    }
+
+    [data-testid="stChatInput"] textarea {
         color: #FFFFFF !important;
-        border: none !important;
-        font-weight: 700 !important;
+        font-size: 0.95rem !important;
     }
 
-    .publish-box div.stButton > button:hover {
-        background-color: #0060DF !important;
-    }
-
-    /* Left Chat & Markdown Output */
-    [data-testid="stChatMessage"] {
+    [data-testid="stBottomBlockContainer"] {
         background: transparent !important;
-        border: none !important;
-        padding: 0.4rem 0 !important;
     }
 
-    [data-testid="stChatMessage"] * {
-        color: #E2E8F0 !important;
-        line-height: 1.6;
-    }
-
-    .agent-header-card {
-        background: #12161E;
-        border: 1px solid #222936;
-        border-radius: 12px;
-        padding: 1.2rem 1.4rem;
-        margin-bottom: 1rem;
-    }
-
-    .palette-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: #251B14;
-        border: 1px solid #5C3218;
-        border-radius: 6px;
-        padding: 2px 8px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: #F97316;
-        margin-bottom: 0.6rem;
-    }
-
-    /* Replit Live Project Slide Viewport */
+    /* Split Screen Browser Window */
     .viewport-window {
         background: #FFFFFF;
-        border: 1px solid #242B38;
+        border: 1px solid #262E3E;
         border-radius: 12px;
         overflow: hidden;
         height: 82vh;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.5);
     }
 
     .viewport-browser-bar {
-        background: #181D26;
-        border-bottom: 1px solid #28303E;
+        background: #161B24;
+        border-bottom: 1px solid #262E3E;
         padding: 0.45rem 0.8rem;
         display: flex;
         align-items: center;
@@ -229,20 +305,16 @@ st.markdown(
         align-items: center;
         gap: 8px;
         background: #0E1117;
-        border: 1px solid #242B38;
+        border: 1px solid #262E3E;
         border-radius: 6px;
         padding: 3px 10px;
         font-size: 0.78rem;
         color: #CBD5E1;
-        max-width: 160px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
     }
 
     .browser-address-bar {
         background: #0E1117;
-        border: 1px solid #242B38;
+        border: 1px solid #262E3E;
         border-radius: 6px;
         padding: 4px 12px;
         font-size: 0.8rem;
@@ -252,25 +324,6 @@ st.markdown(
         align-items: center;
         gap: 8px;
         font-family: monospace;
-    }
-
-    /* Fixed Chat Input Bar */
-    [data-testid="stBottomBlockContainer"] {
-        background: transparent !important;
-    }
-
-    div[data-testid="stChatInput"] {
-        background-color: #151A22 !important;
-        border: 1px solid #2A3342 !important;
-        border-radius: 12px !important;
-    }
-
-    div[data-testid="stChatInput"]:focus-within {
-        border-color: #F26522 !important;
-    }
-
-    div[data-testid="stChatInput"] textarea {
-        color: #FFFFFF !important;
     }
     </style>
     """,
@@ -284,67 +337,12 @@ if "user_name" not in st.session_state:
     st.session_state.user_name = "Mahesh"
 if "project_name" not in st.session_state:
     st.session_state.project_name = "Dine Easy"
+if "workspace_view" not in st.session_state:
+    st.session_state.workspace_view = "home"  # 'home' or 'workspace'
 if "html_code" not in st.session_state:
-    st.session_state.html_code = """
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="utf-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: #FFF8ED; color: #5C2318; padding: 2rem 1.5rem; }
-        .header-logo { text-align: center; margin-bottom: 2rem; }
-        .header-logo h2 { color: #28B4C4; font-size: 1.8rem; font-weight: 800; display: inline-flex; align-items: center; gap: 6px; }
-        .card { background: #FFFFFF; border-radius: 16px; padding: 2.2rem 1.8rem; max-width: 440px; margin: 0 auto; box-shadow: 0 10px 30px rgba(92, 35, 24, 0.07); border: 1px solid #F1E5D8; }
-        .card h1 { color: #28B4C4; font-size: 1.95rem; font-weight: 800; text-align: center; margin-bottom: 0.5rem; line-height: 1.2; }
-        .card p { color: #7B4B3A; font-size: 0.95rem; text-align: center; margin-bottom: 1.8rem; line-height: 1.5; }
-        .field { margin-bottom: 1.2rem; }
-        .field label { display: block; font-size: 0.85rem; font-weight: 700; color: #5C2318; margin-bottom: 0.35rem; }
-        .field input { width: 100%; padding: 0.8rem 1rem; border: 1.5px solid #E7D8C8; border-radius: 10px; font-size: 0.95rem; outline: none; background: #FAF7F2; }
-        .field input:focus { border-color: #28B4C4; background: #FFFFFF; }
-        .btn-submit { width: 100%; padding: 0.9rem; background: #28B4C4; color: #FFFFFF; font-size: 1rem; font-weight: 700; border: none; border-radius: 10px; cursor: pointer; transition: 0.15s; margin-top: 0.5rem; }
-        .btn-submit:hover { background: #1EA1B0; }
-      </style>
-    </head>
-    <body>
-      <div class="header-logo">
-        <h2>☕ Bean Board</h2>
-      </div>
-      <div class="card">
-        <h1>Join the Bean Board Family</h1>
-        <p>Sign up for exclusive offers, secret menu items, and a special treat on your birthday!</p>
-        <div class="field">
-          <label>Full Name</label>
-          <input type="text" placeholder="John Doe" />
-        </div>
-        <div class="field">
-          <label>WhatsApp Number</label>
-          <input type="tel" placeholder="+91 98765 43210" />
-        </div>
-        <button class="btn-submit" onclick="alert('Welcome to the Bean Board family!')">Join Now</button>
-      </div>
-    </body>
-    </html>
-    """
-
+    st.session_state.html_code = ""
 if "messages" not in st.session_state:
-    st.session_state.messages = [
-        {
-            "role": "model",
-            "parts": [
-                {
-                    "text": (
-                        "**Colour palette extracted from the logo:**\n\n"
-                        "- **Primary (teal) `#28B4C4`** — used on all buttons, CTAs, category tabs, prices, and the Cart action.\n"
-                        "- **Secondary (coffee brown) `#5C2318`** — used as the footer background, heading typography, and secondary actions.\n"
-                        "- **Background stays cream `#FFF8ED`** — provides a warm coastal feel.\n\n"
-                        "The live project purpose slide is updated and interactive in your right pane."
-                    )
-                }
-            ],
-        }
-    ]
+    st.session_state.messages = []
 
 # ---------------------------------------------------------
 # Sidebar
@@ -352,141 +350,232 @@ if "messages" not in st.session_state:
 with st.sidebar:
     st.markdown(
         """
-        <div class="sb-brand">
-            <span class="sb-brand-icon">⠕</span> Ciwi Agent
+        <div class="sb-top">
+            <div class="sb-logo">
+                <svg viewBox="0 0 32 32"><path d="M7 6h8v8H7zm10 0h8v8h-8zM7 16h8v8H7z"/></svg>
+            </div>
+            <div style="display:flex; gap:10px; color:#94A3B8; font-size:0.9rem;">
+                <span>🔍</span>
+                <span>◫</span>
+            </div>
         </div>
-        <div class="workspace-select">
-            <span>📁 Personal workspace</span>
+        <div class="workspace-pill">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span>👤</span>
+                <span>Personal workspace</span>
+            </div>
             <span>▾</span>
         </div>
-        <a class="nav-btn" href="#">➕ New Repl</a>
-        <a class="nav-btn" href="#">📥 Import</a>
-        <a class="nav-btn" href="#">📁 Projects</a>
-        <a class="nav-btn" href="#">⏱️ Routines <span style="background:#28303E; font-size:0.7rem; padding:1px 6px; border-radius:4px; margin-left:auto; color:#60A5FA;">Beta</span></a>
-        <a class="nav-btn" href="#">📚 Library</a>
-        <a class="nav-btn" href="#">🔌 Integrations</a>
-        <a class="nav-btn" href="#">🔒 Security</a>
-        <div class="recent-header">RECENT</div>
-        <a class="nav-btn active" href="#">› Dine Easy</a>
-        <a class="nav-btn" href="#">› Fashion Showcase</a>
+        <a class="sb-nav-item" href="#">➕ New</a>
+        <a class="sb-nav-item" href="#">📥 Import</a>
+        <a class="sb-nav-item" href="#">📁 Projects</a>
+        <a class="sb-nav-item" href="#">⏱️ Routines <span class="beta-tag">Beta</span></a>
+        <a class="sb-nav-item" href="#">📚 Library</a>
+        <a class="sb-nav-item" href="#">🔌 Integrations</a>
+        <a class="sb-nav-item" href="#">🔒 Security</a>
+        <div class="sb-recent-title">Recent</div>
+        <a class="sb-nav-item" href="#">› Fashion Showcase</a>
+        <a class="sb-nav-item" href="#" style="color:#FFFFFF !important; background:#181E29;">› Dine Easy</a>
         <div class="upgrade-card">
             <div>
-                <div style="font-size:0.84rem; font-weight:700; color:#FFFFFF;">Upgrade plan</div>
-                <div style="font-size:0.72rem; color:#8B949E;">Unlock GPU credits</div>
+                <div style="font-size:0.82rem; font-weight:700; color:#FFFFFF;">Upgrade your plan</div>
+                <div style="font-size:0.72rem; color:#8B949E; margin-top:2px;">Unlock more credits</div>
             </div>
-            <span style="color:#0070F3; font-size:1.2rem;">★</span>
+            <div class="upgrade-btn-plus">+</div>
+        </div>
+        <div style="margin-top:1.5rem;">
+            <a class="sb-nav-item" href="#">❔ Learn more</a>
         </div>
         """,
         unsafe_allow_html=True,
     )
-    st.caption(f"Logged in as: **{st.session_state.user_name}**")
-
-# ---------------------------------------------------------
-# Top Navigation Header
-# ---------------------------------------------------------
-h_col_left, h_col_right = st.columns([6, 4])
-
-with h_col_left:
     st.markdown(
         f"""
-        <div class="top-bar-left">
-            <div class="proj-title-pill">📁 {st.session_state.project_name} ▾</div>
-            <span class="mode-tab">Design</span>
-            <span class="mode-tab active">Build</span>
+        <div class="user-footer">
+            <div style="display:flex; align-items:center; gap:8px; color:#FFFFFF; font-size:0.88rem; font-weight:600;">
+                <span>👤</span>
+                <span>{st.session_state.user_name}</span>
+            </div>
+            <span style="color:#64748B; cursor:pointer;">⚙️</span>
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-with h_col_right:
-    t_c1, t_c2, t_c3 = st.columns([1.2, 1.2, 1.5])
-    with t_c1:
-        st.button("⚙️ Tools", use_container_width=True)
-    with t_c2:
-        st.button("👥 Invite", use_container_width=True)
-    with t_c3:
-        st.markdown('<div class="publish-box">', unsafe_allow_html=True)
-        if st.button("🚀 Publish", use_container_width=True):
-            st.toast("Published directly to ciwi.replit.dev!", icon="🚀")
-        st.markdown("</div>", unsafe_allow_html=True)
-
-st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
-
 # ---------------------------------------------------------
-# Main 2-Slide Workspace (Left: Agent Chat | Right: Project Purpose Slide)
+# View 1: Replit Exact Home Screen (Screenshot Match)
 # ---------------------------------------------------------
-col_left_agent, col_right_project = st.columns([1, 1], gap="large")
-
-# --- Left Slide: Terminal History & Conversation ---
-with col_left_agent:
-    terminal_box = st.container(height=520)
-    with terminal_box:
+if st.session_state.workspace_view == "home":
+    # Recent Projects Cards Row
+    st.markdown('<div class="recent-header-text">Recent projects</div>', unsafe_allow_html=True)
+    
+    r_col1, r_col2, r_col_rest = st.columns([1.8, 1.8, 6.4])
+    with r_col1:
         st.markdown(
             """
-            <div class="agent-header-card">
-                <div class="palette-badge">🎨 Theme Architecture</div>
-                <h4 style="margin: 0 0 6px 0; color:#FFFFFF;">Active Project Configuration</h4>
-                <p style="font-size:0.85rem; color:#94A3B8; margin:0;">Autonomous Agent executing design tokens & live layouts.</p>
+            <div class="project-card">
+                <div class="project-card-title">Fashion Showcase</div>
+                <div class="project-card-sub">🔒 · 11 minutes ago</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with r_col2:
+        st.markdown(
+            """
+            <div class="project-card">
+                <div class="project-card-title">Dine Easy</div>
+                <div class="project-card-sub">🔒 · 3 months ago</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
 
-        for m in st.session_state.messages:
-            role = "assistant" if m["role"] == "model" else "user"
-            with st.chat_message(role):
-                st.markdown(m["parts"][0]["text"])
-
-    # Sticky prompt capsule pinned at base
-    if prompt_agent := st.chat_input("Message Agent..."):
-        st.session_state.messages.append({"role": "user", "parts": [{"text": prompt_agent}]})
-        api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
-
-        if not api_key:
-            st.error("Missing GEMINI_API_KEY in Secrets.")
-        else:
-            client = genai.Client(api_key=api_key)
-            with st.spinner("⚡ Ciwi Agent updating live project slide..."):
-                gen_prompt = (
-                    f"You are the Ciwi Autonomous Web Engine. The user requested: '{prompt_agent}'.\n"
-                    f"Current code base:\n{st.session_state.html_code}\n\n"
-                    "Requirements:\n"
-                    "1. Provide a bulleted summary of UI/UX updates.\n"
-                    "2. Return the complete updated standalone HTML/CSS/JS inside a ```html ``` block."
-                )
-                res = client.models.generate_content(
-                    model="gemini-3-flash-preview",
-                    contents=gen_prompt,
-                )
-                response_text = res.text
-
-                if "```html" in response_text:
-                    st.session_state.html_code = response_text.split("```html")[1].split("```")[0].strip()
-
-                st.session_state.messages.append({"role": "model", "parts": [{"text": response_text}]})
-                st.rerun()
-
-# --- Right Slide: Live Interactive Project Purpose Slide ---
-with col_right_project:
+    # Hero Center with Ambient Glow
     st.markdown(
         f"""
-        <div class="viewport-window">
-            <div class="viewport-browser-bar">
-                <div class="browser-tabs">
-                    <span>Bean Board - Bhe...</span>
-                    <span style="font-size: 0.65rem; margin-left:auto;">✕</span>
-                </div>
-                <div class="browser-address-bar">
-                    <span style="color:#64748B;">← → ⟳</span>
-                    <span style="color:#38BDF8;">https://</span><span>ciwi.replit.dev/{st.session_state.project_name.lower().replace(' ', '-')}</span>
-                </div>
-                <div style="color:#94A3B8; font-size:0.85rem;">◰</div>
+        <div class="hero-glow-container">
+            <div class="hero-glow-bg"></div>
+            <div class="hero-headline">{st.session_state.user_name}, what are we working on today?</div>
+            <div class="suggested-label">
+                <span>Suggested for you</span>
+                <span style="cursor:pointer;">⟳</span>
             </div>
+        </div>
         """,
         unsafe_allow_html=True,
     )
 
-    # Clean embedded execution iframe
-    components.html(st.session_state.html_code, height=520, scrolling=True)
+    # Suggestion Pills
+    pill_c1, pill_c2, pill_rest = st.columns([2.2, 2.2, 5.6])
+    selected_preset = None
+    with pill_c1:
+        if st.button("✨ Help me get things done", use_container_width=True):
+            selected_preset = "Build a customer feedback dashboard with analytical metrics and graphs."
+    with pill_c2:
+        if st.button("↪ Review Resend delivery", use_container_width=True):
+            selected_preset = "Build an email delivery log and newsletter analytics app."
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    # Bottom Pinned Prompt Capsule
+    prompt = st.chat_input("Start chatting or describe a task...") or selected_preset
+
+    if prompt:
+        api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
+        if not api_key:
+            st.error("Please configure your GEMINI_API_KEY in Streamlit Secrets.")
+        else:
+            client = genai.Client(api_key=api_key)
+            st.session_state.workspace_view = "workspace"
+            st.session_state.messages.append({"role": "user", "parts": [{"text": prompt}]})
+
+            with st.spinner("⚡ Ciwi Agent is building your application..."):
+                system_instruction = (
+                    "You are the Ciwi Autonomous Web Agent (Replit Agent clone). "
+                    "1. Explain the changes and design tokens concisely in markdown bullet points. "
+                    "2. Return the complete, fully responsive standalone HTML/CSS/JS code wrapped in a ```html ``` block."
+                )
+                res = client.models.generate_content(
+                    model="gemini-3-flash-preview",
+                    contents=prompt,
+                    config=types.GenerateContentConfig(system_instruction=system_instruction, temperature=0.7),
+                )
+                raw_text = res.text
+
+                if "```html" in raw_text:
+                    st.session_state.html_code = raw_text.split("```html")[1].split("```")[0].strip()
+                elif "```" in raw_text:
+                    st.session_state.html_code = raw_text.split("```")[1].split("```")[0].strip()
+                else:
+                    st.session_state.html_code = f"<html><body style='font-family:sans-serif;padding:2rem;'><h1>Live Build</h1><p>{raw_text}</p></body></html>"
+
+                st.session_state.messages.append({"role": "model", "parts": [{"text": raw_text}]})
+                st.rerun()
+
+# ---------------------------------------------------------
+# View 2: Replit 2-Column Split Workspace (Terminal + Live Slide)
+# ---------------------------------------------------------
+else:
+    # Workspace Top Header Bar
+    top_l, top_r = st.columns([6, 4])
+    with top_l:
+        st.markdown(
+            f"""
+            <div style="display:flex; align-items:center; gap:14px;">
+                <div style="background:#181E29; border:1px solid #252F42; border-radius:8px; padding:4px 12px; font-weight:700; font-size:0.88rem; color:#FFFFFF;">
+                    📁 {st.session_state.project_name} ▾
+                </div>
+                <span style="color:#94A3B8; font-size:0.85rem; font-weight:600; cursor:pointer;">Design</span>
+                <span style="color:#F26522; font-size:0.85rem; font-weight:700; border-bottom: 2px solid #F26522; padding-bottom: 2px;">Build</span>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    with top_r:
+        b1, b2, b3 = st.columns([1, 1, 1.3])
+        with b1:
+            st.button("⚙️ Tools", use_container_width=True)
+        with b2:
+            st.button("👥 Invite", use_container_width=True)
+        with b3:
+            if st.button("🚀 Publish", use_container_width=True):
+                st.toast("Application deployed to ciwi.replit.dev!", icon="🚀")
+
+    st.markdown("<div style='height: 10px;'></div>", unsafe_allow_html=True)
+
+    # 50/50 Split
+    col_term, col_view = st.columns([1, 1], gap="medium")
+
+    # Left: Terminal Output & Chat
+    with col_term:
+        chat_container = st.container(height=540)
+        with chat_container:
+            for msg in st.session_state.messages:
+                role = "assistant" if msg["role"] == "model" else "user"
+                with st.chat_message(role):
+                    st.markdown(msg["parts"][0]["text"])
+
+        # Pinned message input
+        if follow_up := st.chat_input("Message Agent..."):
+            st.session_state.messages.append({"role": "user", "parts": [{"text": follow_up}]})
+            api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
+            client = genai.Client(api_key=api_key)
+
+            with st.spinner("⚡ Updating live workspace..."):
+                res = client.models.generate_content(
+                    model="gemini-3-flash-preview",
+                    contents=(
+                        f"Current code:\n{st.session_state.html_code}\n\n"
+                        f"User request: {follow_up}\n"
+                        "Return concise summary + full code inside ```html ``` block."
+                    ),
+                )
+                output = res.text
+                if "```html" in output:
+                    st.session_state.html_code = output.split("```html")[1].split("```")[0].strip()
+                st.session_state.messages.append({"role": "model", "parts": [{"text": output}]})
+                st.rerun()
+
+    # Right: The Live Project Slide Viewport
+    with col_view:
+        st.markdown(
+            f"""
+            <div class="viewport-window">
+                <div class="viewport-browser-bar">
+                    <div class="browser-tabs">
+                        <span>{st.session_state.project_name}</span>
+                        <span style="font-size: 0.65rem; margin-left:auto;">✕</span>
+                    </div>
+                    <div class="browser-address-bar">
+                        <span style="color:#64748B;">← → ⟳</span>
+                        <span style="color:#38BDF8;">https://</span><span>ciwi.replit.dev/{st.session_state.project_name.lower().replace(' ', '-')}</span>
+                    </div>
+                    <div style="color:#94A3B8; font-size:0.85rem;">◰</div>
+                </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        components.html(st.session_state.html_code, height=540, scrolling=True)
+
+        st.markdown("</div>", unsafe_allow_html=True)
