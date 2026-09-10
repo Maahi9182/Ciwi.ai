@@ -11,6 +11,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
+# --- CSS Styling ---
 st.markdown(
     """
     <style>
@@ -194,7 +195,6 @@ st.markdown(
         padding: 0 !important;
     }
 
-    /* Ensure user typed text is clearly visible */
     [data-testid="stForm"] input {
         background: transparent !important;
         border: none !important;
@@ -252,7 +252,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# State initialization
+# Session State Initialization
 if "user_name" not in st.session_state:
     st.session_state.user_name = "Mahesh"
 if "view_mode" not in st.session_state:
@@ -263,7 +263,11 @@ if "html_code" not in st.session_state:
     st.session_state.html_code = ""
 
 def is_design_task(text: str) -> bool:
-    keywords = ["build", "create", "make a website", "make an app", "design", "redesign", "add button", "clone", "dashboard", "html", "css"]
+    keywords = [
+        "build", "create", "make a website", "make an app",
+        "design", "redesign", "add button", "clone",
+        "dashboard", "html", "css"
+    ]
     return any(k in text.lower() for k in keywords)
 
 def query_gemini(prompt: str, is_design: bool):
@@ -280,13 +284,19 @@ def query_gemini(prompt: str, is_design: bool):
         )
         context = f"Current App Code:\n{st.session_state.html_code}\n\nTask: {prompt}"
     else:
-        sys_prompt = "You are Ciwi, a helpful AI assistant. Provide concise, friendly conversation. Do NOT output code or HTML."
+        sys_prompt = (
+            "You are Ciwi, a helpful AI assistant. "
+            "Provide concise, friendly conversation. Do NOT output code or HTML."
+        )
         context = prompt
 
     res = client.models.generate_content(
         model="gemini-3-flash-preview",
         contents=context,
-        config=types.GenerateContentConfig(system_instruction=sys_prompt, temperature=0.7),
+        config=types.GenerateContentConfig(
+            system_instruction=sys_prompt,
+            temperature=0.7,
+        ),
     )
     return res.text
 
@@ -354,4 +364,165 @@ with st.sidebar:
                 <span>👤</span>
                 <span>Mahesh</span>
             </div>
-            <span style="color:#
+            <span style="color:#64748B; cursor:pointer;">⚙️</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+# --- View Routing ---
+if st.session_state.view_mode == "home":
+    st.markdown('<div style="font-size:0.82rem; font-weight:600; color:#8B949E; margin-bottom:0.75rem;">Recent projects</div>', unsafe_allow_html=True)
+    r1, r2, r3 = st.columns(3)
+    with r1:
+        st.markdown(
+            """
+            <div class="recent-card">
+                <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Ciwi AI Assistant</div>
+                <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 2 minutes ago</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with r2:
+        st.markdown(
+            """
+            <div class="recent-card">
+                <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Fashion Showcase</div>
+                <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 53 minutes ago</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+    with r3:
+        st.markdown(
+            """
+            <div class="recent-card">
+                <div style="font-size:0.92rem; font-weight:600; color:#FFFFFF;">Dine Easy</div>
+                <div style="font-size:0.76rem; color:#64748B; margin-top:4px;">🔒 · 3 months ago</div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+    st.markdown("<div style='height: 3rem;'></div>", unsafe_allow_html=True)
+
+    st.markdown(
+        f'<div style="font-size:2.5rem; font-weight:600; color:#F3F4F6; margin-bottom:1.4rem;">{st.session_state.user_name}, what are we working on today?</div>',
+        unsafe_allow_html=True,
+    )
+
+    st.markdown(
+        """
+        <div style="display:flex; align-items:center; gap:6px; font-size:0.8rem; color:#8C96A5; margin-bottom:0.75rem;">
+            <span>Suggested for you</span>
+            <span style="cursor:pointer;">⟳</span>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    clicked_task = None
+    if st.button("✦  Help me get things done", key="p_help"):
+        clicked_task = "Build a productivity dashboard with task organization"
+    if st.button("🟥  Review RevenueCat growth", key="p_rc"):
+        clicked_task = "Build an analytics dashboard tracking RevenueCat MRR and subscribers"
+    if st.button("📄  Turn my notes into a slide deck", key="p_deck"):
+        clicked_task = "Build a presentation slide generator app from user notes"
+
+    st.markdown(
+        """
+        <div class="credit-banner">
+            <span>You've used up your daily credits. Upgrade to continue.</span>
+            <button class="btn-upgrade-core"><span>+</span> Upgrade to Core</button>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    with st.form("home_search_form", clear_on_submit=False):
+        typed_input = st.text_input(
+            "Task",
+            placeholder="Start chatting or describe a task...",
+            label_visibility="collapsed",
+        )
+
+        st.markdown(
+            """
+            <div class="console-bottom-toolbar">
+                <span style="color:#7E8B9D; font-size:1.15rem; cursor:pointer;">+</span>
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <div style="display:inline-flex; align-items:center; gap:5px; color:#8E9BAE; font-size:0.82rem; cursor:pointer;">
+                        <span>:::</span>
+                        <span>Free ▾</span>
+                    </div>
+                    <span style="color:#7E8B9D; cursor:pointer; font-size:0.95rem;">🎙️</span>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+        col_space, col_send = st.columns([15, 1])
+        with col_send:
+            submitted = st.form_submit_button("↑")
+
+    # Display conversation messages above the prompt bar
+    if st.session_state.messages:
+        st.markdown("<div style='height: 1.5rem;'></div>", unsafe_allow_html=True)
+        for msg in st.session_state.messages:
+            role = "assistant" if msg["role"] == "model" else "user"
+            with st.chat_message(role):
+                st.markdown(msg["text"])
+
+    active_prompt = typed_input if (submitted and typed_input) else clicked_task
+    if active_prompt:
+        st.session_state.messages.append({"role": "user", "text": active_prompt})
+
+        if is_design_task(active_prompt):
+            st.session_state.view_mode = "workspace"
+            with st.spinner("⚡ Autonomous Agent composing application..."):
+                reply = query_gemini(active_prompt, is_design=True)
+                if "```html" in reply:
+                    st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
+                    st.session_state.messages.append({"role": "model", "text": reply.split("```html")[0].strip()})
+                else:
+                    st.session_state.messages.append({"role": "model", "text": reply})
+        else:
+            with st.spinner("⚡ Responding..."):
+                reply = query_gemini(active_prompt, is_design=False)
+                st.session_state.messages.append({"role": "model", "text": reply})
+
+        st.rerun()
+
+else:
+    top_c1, top_c2 = st.columns([7, 3])
+    with top_c1:
+        st.markdown("### 📁 Ciwi AI Assistant · Live Build")
+    with top_c2:
+        if st.button("← Back to Home"):
+            st.session_state.view_mode = "home"
+            st.rerun()
+
+    c_chat, c_prev = st.columns([1, 1], gap="medium")
+
+    with c_chat:
+        chat_box = st.container(height=540)
+        with chat_box:
+            for m in st.session_state.messages:
+                role = "assistant" if m["role"] == "model" else "user"
+                with st.chat_message(role):
+                    st.markdown(m["text"])
+
+        if follow := st.chat_input("Message Agent..."):
+            st.session_state.messages.append({"role": "user", "text": follow})
+            reply = query_gemini(follow, is_design=True)
+            if "```html" in reply:
+                st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
+                st.session_state.messages.append({"role": "model", "text": reply.split("```html")[0].strip()})
+            else:
+                st.session_state.messages.append({"role": "model", "text": reply})
+            st.rerun()
+
+    with c_prev:
+        components.html(st.session_state.html_code, height=580, scrolling=True)
