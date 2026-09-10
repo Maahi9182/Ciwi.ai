@@ -3,374 +3,311 @@ import streamlit as st
 from google import genai
 from google.genai import types
 
-# ---------------------------------------------------------
-# Page Configuration
-# ---------------------------------------------------------
+# Page setup
 st.set_page_config(
     page_title="Ciwi AI",
     page_icon="⚡",
-    layout="wide",
+    layout="centered",
     initial_sidebar_state="collapsed",
 )
 
-# ---------------------------------------------------------
-# Replit-Style Warm Editorial Theme CSS
-# ---------------------------------------------------------
+# Design styling
 st.markdown(
     """
     <style>
-    /* Global Base */
+    /* Warm canvas & typography */
     html, body, [data-testid="stAppViewContainer"] {
         background-color: #FAF8F5 !important;
-        color: #1A1A1A !important;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        color: #111827 !important;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
     }
 
     [data-testid="stHeader"], [data-testid="stToolbar"] {
         background: transparent !important;
     }
 
-    /* Top Navigation Bar */
-    .replit-nav {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 1rem 2rem 1rem;
-        border-bottom: 1px solid #ECE7E1;
-        margin-bottom: 2.5rem;
+    .block-container {
+        max-width: 820px !important;
+        padding-top: 1.5rem !important;
+        padding-bottom: 4rem !important;
     }
 
-    .nav-left {
+    /* Top Navigation */
+    .brand-wrap {
         display: flex;
         align-items: center;
-        gap: 2rem;
-    }
-
-    .brand-logo {
-        display: flex;
-        align-items: center;
-        gap: 0.55rem;
-        font-size: 1.45rem;
+        gap: 0.5rem;
+        font-size: 1.5rem;
         font-weight: 800;
         color: #111827;
         letter-spacing: -0.03em;
     }
 
-    .brand-mark {
+    .brand-icon {
         color: #F26522;
-        font-size: 1.5rem;
+        font-size: 1.6rem;
     }
 
-    .nav-links {
-        display: flex;
-        gap: 1.5rem;
-        font-size: 0.95rem;
-        color: #4B5563;
-        font-weight: 500;
-    }
-
-    /* Hero Center Section */
-    .hero-container {
-        text-align: center;
-        max-width: 820px;
-        margin: 0 auto 2rem auto;
-    }
-
+    /* Hero Text */
     .hero-title {
-        font-size: 3.6rem;
-        font-weight: 700;
-        letter-spacing: -0.035em;
-        color: #1A1A1A;
-        line-height: 1.15;
-        margin-bottom: 0.8rem;
+        text-align: center;
+        font-size: 3.8rem;
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        color: #141414;
+        margin-top: 2rem;
+        margin-bottom: 0.4rem;
+        line-height: 1.1;
     }
 
     .hero-subtitle {
+        text-align: center;
         font-size: 1.15rem;
         color: #6B7280;
-        font-weight: 400;
-        margin-bottom: 1.8rem;
+        margin-bottom: 2.2rem;
     }
 
-    /* Primary Prompt Box Styling */
-    div[data-testid="stTextInput"] > div > div > input {
+    /* Clean white inputs */
+    div[data-testid="stTextInput"] input {
         background-color: #FFFFFF !important;
         border: 1px solid #E5E0D8 !important;
         border-radius: 16px !important;
-        padding: 1.2rem 1.4rem !important;
+        height: 3.4rem !important;
         font-size: 1.05rem !important;
+        padding-left: 1.2rem !important;
         color: #111827 !important;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04) !important;
-        transition: all 0.2s ease;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03) !important;
     }
 
-    div[data-testid="stTextInput"] > div > div > input:focus {
+    div[data-testid="stTextInput"] input:focus {
         border-color: #F26522 !important;
-        box-shadow: 0 4px 24px rgba(242, 101, 34, 0.15) !important;
+        box-shadow: 0 0 0 3px rgba(242, 101, 34, 0.12) !important;
     }
 
-    /* Buttons */
+    /* Neutral secondary pill buttons */
     div.stButton > button {
-        border-radius: 12px !important;
-        font-weight: 600 !important;
+        background-color: #FFFFFF !important;
+        color: #374151 !important;
         border: 1px solid #E5E0D8 !important;
-        transition: all 0.2s ease;
+        border-radius: 12px !important;
+        padding: 0.45rem 0.9rem !important;
+        font-size: 0.92rem !important;
+        font-weight: 500 !important;
+        transition: all 0.15s ease-in-out;
+        box-shadow: 0 1px 2px rgba(0,0,0,0.02);
     }
 
     div.stButton > button:hover {
-        border-color: #F26522 !important;
-        color: #F26522 !important;
+        border-color: #D1D5DB !important;
+        background-color: #F9FAFB !important;
+        color: #111827 !important;
     }
 
-    /* Orange Primary Accent Button */
-    .primary-btn div.stButton > button {
+    /* Orange circular action button */
+    .submit-btn div.stButton > button {
         background-color: #F26522 !important;
         color: #FFFFFF !important;
         border: none !important;
+        border-radius: 14px !important;
+        height: 3.4rem !important;
+        font-size: 1.2rem !important;
+        font-weight: 700 !important;
+        box-shadow: 0 4px 14px rgba(242, 101, 34, 0.3) !important;
     }
 
-    .primary-btn div.stButton > button:hover {
-        background-color: #D95316 !important;
+    .submit-btn div.stButton > button:hover {
+        background-color: #DC5416 !important;
         color: #FFFFFF !important;
     }
 
-    /* Result Card */
-    .output-card {
-        background: #FFFFFF;
+    /* Center prompt suggestions */
+    .prompt-label {
+        text-align: center;
+        color: #9CA3AF;
+        font-size: 0.88rem;
+        margin-top: 1.8rem;
+        margin-bottom: 0.8rem;
+    }
+
+    /* Result container card */
+    .response-card {
+        background-color: #FFFFFF;
         border: 1px solid #E5E0D8;
         border-radius: 16px;
         padding: 1.8rem;
-        margin-top: 1.5rem;
-        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+        margin-top: 2rem;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }
     </style>
     """,
     unsafe_allow_html=True,
 )
 
-# ---------------------------------------------------------
-# State Management
-# ---------------------------------------------------------
+# State initialization
 if "authenticated" not in st.session_state:
     st.session_state.authenticated = False
 if "user_name" not in st.session_state:
     st.session_state.user_name = None
-if "user_email" not in st.session_state:
-    st.session_state.user_email = None
-if "active_mode" not in st.session_state:
-    st.session_state.active_mode = "Chat & Build"
-if "prompt_input" not in st.session_state:
-    st.session_state.prompt_input = ""
+if "selected_mode" not in st.session_state:
+    st.session_state.selected_mode = "Website"
+if "prefill_query" not in st.session_state:
+    st.session_state.prefill_query = ""
 
-# ---------------------------------------------------------
-# Top Header / Nav
-# ---------------------------------------------------------
-col_nav_left, col_nav_right = st.columns([3, 1])
+# Navigation Bar
+nav_col1, nav_col2, nav_col3 = st.columns([4, 1, 1])
 
-with col_nav_left:
+with nav_col1:
     st.markdown(
         """
-        <div class="brand-logo">
-            <span class="brand-mark">⠕</span> Ciwi
+        <div class="brand-wrap">
+            <span class="brand-icon">⠕</span> Ciwi
         </div>
         """,
         unsafe_allow_html=True,
     )
 
-with col_nav_right:
+with nav_col2:
     if not st.session_state.authenticated:
-        btn_col1, btn_col2 = st.columns(2)
-        with btn_col1:
-            if st.button("Sign In"):
-                st.session_state.show_auth = "signin"
-        with btn_col2:
-            if st.button("Create Account"):
-                st.session_state.show_auth = "signup"
+        if st.button("Sign In", use_container_width=True):
+            st.session_state.show_login = True
     else:
-        u_col1, u_col2 = st.columns([2, 1])
-        with u_col1:
-            st.markdown(f"**{st.session_state.user_name}**")
-        with u_col2:
-            if st.button("Logout"):
-                st.session_state.authenticated = False
-                st.rerun()
+        st.write(f"👋 **{st.session_state.user_name}**")
 
-# ---------------------------------------------------------
-# Sign In / Create Account Popover Modals
-# ---------------------------------------------------------
-if (
-    st.session_state.get("show_auth")
-    and not st.session_state.authenticated
-):
-    with st.expander(
-        "🔐 Sign in to Ciwi with Google or Email",
-        expanded=True,
-    ):
-        quick_col1, quick_col2 = st.columns(2)
-        with quick_col1:
-            if st.button("Continue as Mahi Ch (Google)"):
+with nav_col3:
+    if not st.session_state.authenticated:
+        if st.button("Create Account", use_container_width=True):
+            st.session_state.show_login = True
+    else:
+        if st.button("Sign Out", use_container_width=True):
+            st.session_state.authenticated = False
+            st.rerun()
+
+# Google Login Modal Dropdown
+if st.session_state.get("show_login") and not st.session_state.authenticated:
+    with st.expander("Sign in to ciwi.ai with google.com", expanded=True):
+        m_col1, m_col2 = st.columns(2)
+        with m_col1:
+            if st.button("Mahi Ch (mahich9182@gmail.com)", use_container_width=True):
                 st.session_state.authenticated = True
                 st.session_state.user_name = "Mahi Ch"
-                st.session_state.user_email = "mahich9182@gmail.com"
-                st.session_state.show_auth = False
+                st.session_state.show_login = False
                 st.rerun()
-        with quick_col2:
-            if st.button("Continue as Mahesh (Google)"):
+        with m_col2:
+            if st.button("Mahesh (22b91a0134@gmail.com)", use_container_width=True):
                 st.session_state.authenticated = True
                 st.session_state.user_name = "Mahesh"
-                st.session_state.user_email = "22b91a0134@gmail.com"
-                st.session_state.show_auth = False
+                st.session_state.show_login = False
                 st.rerun()
 
-        st.divider()
-        custom_email = st.text_input("Or enter custom email:")
-        if st.button("Proceed"):
-            if custom_email:
-                st.session_state.authenticated = True
-                st.session_state.user_name = custom_email.split("@")[0]
-                st.session_state.user_email = custom_email
-                st.session_state.show_auth = False
-                st.rerun()
-
-# ---------------------------------------------------------
-# Hero Title Section
-# ---------------------------------------------------------
+# Hero Header
 st.markdown(
     """
-    <div class="hero-container">
-        <div class="hero-title">What will you build?</div>
-        <div class="hero-subtitle">Turn ideas into apps, models, and images in seconds — no coding needed</div>
-    </div>
+    <div class="hero-title">What will you build?</div>
+    <div class="hero-subtitle">Turn ideas into apps in minutes — no coding needed</div>
     """,
     unsafe_allow_html=True,
 )
 
-# ---------------------------------------------------------
-# Category / Mode Tabs
-# ---------------------------------------------------------
-mode_cols = st.columns([1, 1, 1, 1, 1])
+# Main Input Row
+input_box_col, btn_box_col = st.columns([6, 1])
 
-with mode_cols[0]:
-    if st.button("💬 Chat & Build", use_container_width=True):
-        st.session_state.active_mode = "Chat & Build"
-with mode_cols[1]:
-    if st.button("🎨 Image Generation", use_container_width=True):
-        st.session_state.active_mode = "Image Generation"
-with mode_cols[2]:
-    if st.button("📱 Mobile", use_container_width=True):
-        st.session_state.active_mode = "Mobile"
-with mode_cols[3]:
-    if st.button("📐 Design", use_container_width=True):
-        st.session_state.active_mode = "Design"
-with mode_cols[4]:
-    if st.button("🎞 Animation", use_container_width=True):
-        st.session_state.active_mode = "Animation"
+placeholder_text = {
+    "Website": "Build a website for...",
+    "Image Gen": "Describe the visual scene to generate...",
+    "Mobile": "Build a mobile app for...",
+    "Design": "Design an interface layout for...",
+    "Animation": "Create an interactive animation for...",
+}.get(st.session_state.selected_mode, "Build a website for...")
 
-# ---------------------------------------------------------
-# Main Prompt Input Bar with Orange Submit Action
-# ---------------------------------------------------------
-placeholder_map = {
-    "Chat & Build": "Build a website for...",
-    "Image Generation": "Describe an image to generate (e.g. vintage retro aesthetic poster)...",
-    "Mobile": "Build an iOS / Android experience for...",
-    "Design": "Design a high-converting UI landing page for...",
-    "Animation": "Create a smooth CSS/3D animation for...",
-}
-
-input_col, send_col = st.columns([5, 1])
-
-with input_col:
-    user_query = st.text_input(
+with input_box_col:
+    query = st.text_input(
         label="Prompt",
-        placeholder=placeholder_map.get(
-            st.session_state.active_mode, "Ask Ciwi anything..."
-        ),
+        value=st.session_state.prefill_query,
+        placeholder=placeholder_text,
         label_visibility="collapsed",
     )
 
-with send_col:
-    st.markdown('<div class="primary-btn">', unsafe_allow_html=True)
-    submit_clicked = st.button("Generate ➔", use_container_width=True)
+with btn_box_col:
+    st.markdown('<div class="submit-btn">', unsafe_allow_html=True)
+    trigger_submit = st.button("➔", use_container_width=True)
     st.markdown("</div>", unsafe_allow_html=True)
 
-# ---------------------------------------------------------
-# Example Prompt Suggestion Pills
-# ---------------------------------------------------------
-st.caption("Try an example prompt:")
-sug_col1, sug_col2, sug_col3 = st.columns(3)
+# Category Cards Below Input
+c1, c2, c3, c4, c5 = st.columns(5)
 
-with sug_col1:
-    if st.button(
-        "Startup analytics dashboard",
-        key="s1",
-        use_container_width=True,
-    ):
-        user_query = "Create a startup analytics dashboard"
-        submit_clicked = True
+with c1:
+    if st.button("💻  Website", use_container_width=True):
+        st.session_state.selected_mode = "Website"
+        st.rerun()
+with c2:
+    if st.button("🎨  Image Gen", use_container_width=True):
+        st.session_state.selected_mode = "Image Gen"
+        st.rerun()
+with c3:
+    if st.button("📱  Mobile", use_container_width=True):
+        st.session_state.selected_mode = "Mobile"
+        st.rerun()
+with c4:
+    if st.button("📐  Design", use_container_width=True):
+        st.session_state.selected_mode = "Design"
+        st.rerun()
+with c5:
+    if st.button("🎞️  Animation", use_container_width=True):
+        st.session_state.selected_mode = "Animation"
+        st.rerun()
 
-with sug_col2:
-    if st.button(
-        "Vintage men's clothing store showcase",
-        key="s2",
-        use_container_width=True,
-    ):
-        user_query = "Design an online showcase for a vintage retro men's thrift brand"
-        submit_clicked = True
+# Example Prompt Pills
+st.markdown('<div class="prompt-label">Try an example prompt:</div>', unsafe_allow_html=True)
+ex_col1, ex_col2, ex_col3 = st.columns(3)
 
-with sug_col3:
-    if st.button(
-        "Student budget tracker",
-        key="s3",
-        use_container_width=True,
-    ):
-        user_query = "Build a student budget tracker app"
-        submit_clicked = True
+with ex_col1:
+    if st.button("Startup analytics dashboard", use_container_width=True):
+        st.session_state.prefill_query = "Build a startup analytics dashboard"
+        st.rerun()
 
-# ---------------------------------------------------------
-# Processing & Output Generation
-# ---------------------------------------------------------
-if submit_clicked and user_query:
-    api_key = st.secrets.get(
-        "GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY")
-    )
+with ex_col2:
+    if st.button("Cohort analysis dashboard", use_container_width=True):
+        st.session_state.prefill_query = "Build a cohort analysis dashboard"
+        st.rerun()
+
+with ex_col3:
+    if st.button("Student budget tracker", use_container_width=True):
+        st.session_state.prefill_query = "Build a student budget tracker"
+        st.rerun()
+
+# Processing & Response Generation
+if (trigger_submit or query) and trigger_submit:
+    api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY"))
     if not api_key:
-        st.error("Please add GEMINI_API_KEY to your Streamlit secrets.")
+        st.error("API Key missing. Please set GEMINI_API_KEY in Streamlit Secrets.")
     else:
         client = genai.Client(api_key=api_key)
+        st.markdown('<div class="response-card">', unsafe_allow_html=True)
 
-        st.markdown(
-            '<div class="output-card">', unsafe_allow_html=True
-        )
-
-        if st.session_state.active_mode == "Image Generation":
-            st.markdown(
-                f"### 🎨 Image Generation Prompt\n**Prompt:** *{user_query}*"
-            )
-            with st.spinner(
-                "Generating detailed cinematic creative concept & asset direction..."
-            ):
-                img_prompt_response = client.models.generate_content(
+        if st.session_state.selected_mode == "Image Gen":
+            st.markdown(f"**🎨 Generating Creative Visual Blueprint:** *{query}*")
+            with st.spinner("Formulating artistic concept..."):
+                resp = client.models.generate_content(
                     model="gemini-3-flash-preview",
                     contents=(
-                        f"Act as a professional creative director and prompt engineer. "
-                        f"Provide a photorealistic, stylized asset description, lighting setup, "
-                        f"and photographic color palette for the user prompt: {user_query}"
+                        f"Act as an art director. Provide an image prompt, exact camera/lens settings, "
+                        f"color palette, and cinematic lighting for: {query}"
                     ),
                 )
-                st.markdown(img_prompt_response.text)
+                st.markdown(resp.text)
         else:
-            with st.spinner("Ciwi is composing your solution..."):
-                response = client.models.generate_content(
+            with st.spinner(f"Ciwi is composing your {st.session_state.selected_mode} solution..."):
+                resp = client.models.generate_content(
                     model="gemini-3-flash-preview",
-                    contents=user_query,
+                    contents=query,
                     config=types.GenerateContentConfig(
                         system_instruction=(
-                            "You are Ciwi, an elite, clean AI builder inspired by Replit. "
-                            "Deliver concise, modular, and ready-to-use solutions with clear typography."
+                            "You are Ciwi, an elite AI builder. Provide concise, clean, "
+                            "and directly applicable software code or structural plans."
                         ),
                         temperature=0.7,
                     ),
                 )
-                st.markdown(response.text)
+                st.markdown(resp.text)
 
         st.markdown("</div>", unsafe_allow_html=True)
