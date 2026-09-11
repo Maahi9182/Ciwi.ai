@@ -11,13 +11,10 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# ---------------------------------------------------------
-# Warm Beige & Orange Theme Styling
-# ---------------------------------------------------------
+# --- Theme CSS (Beige & Orange) ---
 st.markdown(
     """
     <style>
-    /* Warm Beige Canvas */
     html, body, [data-testid="stAppViewContainer"], .main {
         background-color: #FBF8F3 !important;
         background-image: radial-gradient(ellipse 70% 45% at 50% 92%, rgba(242, 101, 34, 0.12) 0%, rgba(251, 248, 243, 0) 75%) !important;
@@ -38,7 +35,6 @@ st.markdown(
         margin: 0 auto !important;
     }
 
-    /* Left Sidebar: Warm Off-White / Light Cream */
     [data-testid="stSidebar"] {
         background-color: #F5EFEB !important;
         border-right: 1px solid #E5DCD0 !important;
@@ -66,7 +62,6 @@ st.markdown(
         margin-bottom: 0.8rem;
     }
 
-    /* Sidebar Buttons */
     [data-testid="stSidebar"] div.stButton > button {
         background-color: transparent !important;
         color: #4B5563 !important;
@@ -110,7 +105,6 @@ st.markdown(
         width: 100%;
     }
 
-    /* Warm Cards */
     .import-card {
         background: #FFFFFF;
         border: 1px solid #E8DFD3;
@@ -151,7 +145,6 @@ st.markdown(
         padding: 0.9rem 1.1rem;
     }
 
-    /* Pill Buttons on Dashboard */
     div.stButton > button {
         background-color: #FFFFFF !important;
         color: #374151 !important;
@@ -172,7 +165,6 @@ st.markdown(
         color: #F26522 !important;
     }
 
-    /* Replit Input Console in Warm Beige / Crisp White */
     [data-testid="stForm"] {
         background-color: #FFFFFF !important;
         border: 1.5px solid #E8DFD3 !important;
@@ -236,7 +228,6 @@ st.markdown(
         padding-top: 0.5rem;
     }
 
-    /* Chat Messages: Crisp White Card on Beige */
     [data-testid="stChatMessage"] {
         background-color: #FFFFFF !important;
         border: 1px solid #E8DFD3 !important;
@@ -250,7 +241,6 @@ st.markdown(
         color: #1F2937 !important;
     }
 
-    /* Orange Upgrade Button */
     .btn-upgrade-orange {
         background: #F26522;
         color: #FFFFFF;
@@ -274,9 +264,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-# ---------------------------------------------------------
-# State Initializations
-# ---------------------------------------------------------
+# --- State ---
 if "user_name" not in st.session_state:
     st.session_state.user_name = "Mahesh"
 if "current_nav" not in st.session_state:
@@ -314,9 +302,7 @@ def query_gemini(prompt: str, is_design: bool):
     )
     return res.text
 
-# ---------------------------------------------------------
-# Left Sidebar Navigation
-# ---------------------------------------------------------
+# --- Left Sidebar ---
 with st.sidebar:
     st.markdown(
         """
@@ -405,9 +391,7 @@ with st.sidebar:
         unsafe_allow_html=True,
     )
 
-# ---------------------------------------------------------
-# SECTION 1: HOME (Dashboard + Search Bar + Chat)
-# ---------------------------------------------------------
+# --- Navigation Routing ---
 if st.session_state.current_nav == "Home":
     clicked_task = None
 
@@ -415,4 +399,136 @@ if st.session_state.current_nav == "Home":
         st.markdown('<div style="font-size:0.82rem; font-weight:600; color:#6B7280; margin-bottom:0.75rem;">Recent projects</div>', unsafe_allow_html=True)
         r1, r2, r3 = st.columns(3)
         with r1:
-            st.
+            st.markdown('<div class="import-card"><strong style="color:#1F2937;">Ciwi AI Assistant</strong><span style="color:#9CA3AF; font-size:0.76rem;">🔒 · 2m ago</span></div>', unsafe_allow_html=True)
+        with r2:
+            st.markdown('<div class="import-card"><strong style="color:#1F2937;">Fashion Showcase</strong><span style="color:#9CA3AF; font-size:0.76rem;">🔒 · 53m ago</span></div>', unsafe_allow_html=True)
+        with r3:
+            st.markdown('<div class="import-card"><strong style="color:#1F2937;">Dine Easy</strong><span style="color:#9CA3AF; font-size:0.76rem;">🔒 · 3mo ago</span></div>', unsafe_allow_html=True)
+
+        st.markdown("<div style='height: 2.2rem;'></div>", unsafe_allow_html=True)
+        st.markdown(f'<div style="font-size:2.5rem; font-weight:700; color:#111827; margin-bottom:1.4rem;">{st.session_state.user_name}, what are we working on today?</div>', unsafe_allow_html=True)
+        st.markdown('<div style="font-size:0.8rem; color:#6B7280; margin-bottom:0.75rem;">Suggested for you ⟳</div>', unsafe_allow_html=True)
+
+        if st.button("✦  Help me get things done", key="p_help"):
+            clicked_task = "Build a productivity dashboard with task organization"
+        if st.button("🟧  Review RevenueCat growth", key="p_rc"):
+            clicked_task = "Build an analytics dashboard tracking RevenueCat MRR and subscribers"
+        if st.button("📄  Turn my notes into a slide deck", key="p_deck"):
+            clicked_task = "Build a presentation slide generator app from user notes"
+
+    if st.session_state.messages:
+        for msg in st.session_state.messages:
+            role = "assistant" if msg["role"] == "model" else "user"
+            with st.chat_message(role):
+                st.markdown(msg["text"])
+
+    st.markdown(
+        """
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:1.6rem; margin-bottom:0.6rem; font-size:0.86rem; color:#6B7280;">
+            <span>You've used up your daily credits. Upgrade to continue.</span>
+            <button class="btn-upgrade-orange">+ Upgrade to Core</button>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    with st.form("home_search_form", clear_on_submit=True):
+        typed_input = st.text_input("Task", placeholder="Start chatting or describe a task...", label_visibility="collapsed", key="home_search_input")
+        st.markdown(
+            """
+            <div class="console-bottom-toolbar">
+                <span style="color:#6B7280; font-size:1.15rem; cursor:pointer;">+</span>
+                <div style="display:flex; align-items:center; gap:16px; margin-right: 36px;">
+                    <div style="display:inline-flex; align-items:center; gap:5px; color:#4B5563; font-size:0.82rem; cursor:pointer;">
+                        <span>:::</span> <span>Free ▾</span>
+                    </div>
+                    <span style="color:#6B7280; cursor:pointer; font-size:0.95rem;">🎙️</span>
+                </div>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        submitted = st.form_submit_button("↑")
+
+    active_prompt = typed_input if (submitted and typed_input) else clicked_task
+    if active_prompt:
+        st.session_state.messages.append({"role": "user", "text": active_prompt})
+        if is_design_task(active_prompt):
+            st.session_state.current_nav = "Workspace"
+            with st.spinner("⚡ Composing application..."):
+                reply = query_gemini(active_prompt, is_design=True)
+                if "```html" in reply:
+                    st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
+                    st.session_state.messages.append({"role": "model", "text": reply.split("```html")[0].strip()})
+                else:
+                    st.session_state.messages.append({"role": "model", "text": reply})
+        else:
+            with st.spinner("⚡ Responding..."):
+                reply = query_gemini(active_prompt, is_design=False)
+                st.session_state.messages.append({"role": "model", "text": reply})
+        st.rerun()
+
+elif st.session_state.current_nav == "Import":
+    st.markdown('<h1 style="font-size:2.2rem; font-weight:700; color:#111827; margin-bottom:0.4rem;">Import to Replit</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#6B7280; font-size:0.95rem; margin-bottom:1.8rem;">Migrate data, code, and designs from other apps into Replit</p>', unsafe_allow_html=True)
+
+    import_options = [
+        ("GitHub", "Import any repository or existing app. Agent may be less predictable.", "🐙"),
+        ("Bitbucket", "Import a repository or existing app. Agent support may be limited.", "🔷"),
+        ("Figma Design", "Convert your designs into live Apps using Replit Agent", "🎨"),
+        ("Lovable FREE", "Migrate your site to make it production-ready", "🤍"),
+        ("Bolt", "Migrate your prototype to make it production-ready", "⚡"),
+        ("Base44 FREE", "Migrate your site to make it production-ready", "🌐"),
+        ("Vercel FREE", "Migrate your site to make it production-ready", "▲"),
+        ("Spreadsheet", "Create an app from Excel, CSV, or Google Sheets data", "📊"),
+        ("Zip file", "Import from a .zip file.", "📦"),
+        ("Empty", "Start from a completely empty project without Agent setup or scaffolding.", "📄"),
+    ]
+
+    for i in range(0, len(import_options), 2):
+        col1, col2 = st.columns(2)
+        with col1:
+            title, desc, ico = import_options[i]
+            st.markdown(f'<div class="import-card"><div style="display:flex; align-items:center; gap:12px;"><span style="font-size:1.5rem;">{ico}</span><div><div style="font-weight:700; color:#111827;">{title}</div><div style="font-size:0.78rem; color:#6B7280;">{desc}</div></div></div><span style="color:#9CA3AF;">→</span></div>', unsafe_allow_html=True)
+        if i + 1 < len(import_options):
+            with col2:
+                title, desc, ico = import_options[i+1]
+                st.markdown(f'<div class="import-card"><div style="display:flex; align-items:center; gap:12px;"><span style="font-size:1.5rem;">{ico}</span><div><div style="font-weight:700; color:#111827;">{title}</div><div style="font-size:0.78rem; color:#6B7280;">{desc}</div></div></div><span style="color:#9CA3AF;">→</span></div>', unsafe_allow_html=True)
+
+elif st.session_state.current_nav == "Projects":
+    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#111827; margin-bottom:1.2rem;">📁 Projects</h1>', unsafe_allow_html=True)
+    f1, f2, f3, f4 = st.columns([4, 2, 2, 2])
+    with f1:
+        st.text_input("Search projects", placeholder="Search projects...", label_visibility="collapsed")
+    with f2:
+        st.selectbox("Status", ["Any status", "Active", "Archived"], label_visibility="collapsed")
+    with f3:
+        st.selectbox("Artifact", ["Any artifact type", "Website", "Mobile App", "Backend"], label_visibility="collapsed")
+    with f4:
+        st.selectbox("View", ["All projects", "Shared with me"], label_visibility="collapsed")
+
+    p_col1, p_col2, p_col3 = st.columns(3)
+    with p_col1:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">🤖</div><div class="preview-footer"><strong style="color:#111827;">Ciwi AI Assistant</strong><div style="color:#6B7280; font-size:0.78rem;">🔒 · 25 minutes ago</div></div></div>', unsafe_allow_html=True)
+    with p_col2:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">👗</div><div class="preview-footer"><strong style="color:#111827;">Fashion Showcase</strong><div style="color:#6B7280; font-size:0.78rem;">🔒 · 1 hour ago</div></div></div>', unsafe_allow_html=True)
+    with p_col3:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">☕</div><div class="preview-footer"><strong style="color:#111827;">Dine Easy</strong><div style="color:#6B7280; font-size:0.78rem;">🔒 · 1 hour ago</div></div></div>', unsafe_allow_html=True)
+
+elif st.session_state.current_nav == "Routines":
+    st.markdown('<h1 style="font-size:2.2rem; font-weight:700; color:#111827; margin-bottom:0.2rem;">⏱️ Routines <span style="background:#FFE6D8; color:#F26522; font-size:0.8rem; padding:2px 8px; border-radius:4px; font-weight:700;">Beta</span></h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#6B7280; font-size:0.92rem;">Run Replit on a schedule</p>', unsafe_allow_html=True)
+    st.markdown('<h4 style="color:#111827; margin-top:2rem;">Put recurring work on autopilot</h4>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#6B7280; font-size:0.88rem; margin-bottom:1.4rem;">Upgrade to Replit Core to schedule Agent tasks that run for you, even when you are away.</p>', unsafe_allow_html=True)
+
+    routines_list = [
+        ("📅 Check my calendar each morning and tell me what to prepare for", "↗"),
+        ("✉️ Go through my inbox every couple of days and pull out emails that need a reply", "↗"),
+        ("💬 Catch me up every Friday on the Slack messages I missed", "↗"),
+        ("⏰ Schedule a custom routine that...", "↗")
+    ]
+    for text, arr in routines_list:
+        st.markdown(f'<div class="import-card" style="margin-bottom:0.8rem;"><span style="color:#1F2937; font-size:0.9rem;">{text}</span><span style="color:#F26522; font-weight:bold;">{arr}</span></div>', unsafe_allow_html=True)
+
+elif st.session_state.current_nav == "Library":
+    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#111827; margin-bottom:0.2rem;">📚
