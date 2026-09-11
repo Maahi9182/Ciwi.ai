@@ -531,4 +531,126 @@ elif st.session_state.current_nav == "Routines":
         st.markdown(f'<div class="import-card" style="margin-bottom:0.8rem;"><span style="color:#1F2937; font-size:0.9rem;">{text}</span><span style="color:#F26522; font-weight:bold;">{arr}</span></div>', unsafe_allow_html=True)
 
 elif st.session_state.current_nav == "Library":
-    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#111827; margin-bottom:0.2rem;">📚
+    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#111827; margin-bottom:0.2rem;">📚 Library</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#6B7280; font-size:0.92rem; margin-bottom:1.5rem;">Everything Replit has made across your projects</p>', unsafe_allow_html=True)
+    l1, l2, l3 = st.columns([5, 2, 2])
+    with l1:
+        st.text_input("Search artifacts", placeholder="Search artifacts and assets", label_visibility="collapsed")
+    with l2:
+        st.selectbox("Type", ["Any type", "Code", "Components"], label_visibility="collapsed")
+    with l3:
+        st.selectbox("File", ["Any file type", "HTML", "JSON"], label_visibility="collapsed")
+
+    lib1, lib2, lib3 = st.columns(3)
+    with lib1:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">💻</div><div class="preview-footer"><strong style="color:#111827;">Ciwi AI Assistant</strong><div style="color:#6B7280; font-size:0.75rem;">Website · 35m ago</div></div></div>', unsafe_allow_html=True)
+    with lib2:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">🖼️</div><div class="preview-footer"><strong style="color:#111827;">Aster Row</strong><div style="color:#6B7280; font-size:0.75rem;">Website · 1h ago</div></div></div>', unsafe_allow_html=True)
+    with lib3:
+        st.markdown('<div class="project-preview-card"><div class="preview-thumb">☕</div><div class="preview-footer"><strong style="color:#111827;">Bean Board - Bheemili</strong><div style="color:#6B7280; font-size:0.75rem;">Website · 1h ago</div></div></div>', unsafe_allow_html=True)
+
+elif st.session_state.current_nav == "Integrations":
+    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#111827; margin-bottom:0.4rem;">⚙️ Settings & Integrations</h1>', unsafe_allow_html=True)
+    tab_int, tab_custom = st.tabs(["🔌 Connected Integrations", "🧠 Customization & Memory"])
+
+    with tab_int:
+        st.markdown('<p style="color:#6B7280; font-size:0.9rem; margin-bottom:1.2rem;">Connect your favorite services for seamless workspace syncing.</p>', unsafe_allow_html=True)
+        integrations_data = [
+            ("Google Docs", "Connect to create, read, and update documents.", "📄"),
+            ("Google Drive", "Connect to Google Drive to manage files.", "💾"),
+            ("Google Sheets", "Read, write, and modify spreadsheet data via REST API.", "📊"),
+            ("HubSpot", "Manage contacts, deals, and marketing campaigns.", "🎯"),
+            ("Intercom", "Manage users and conversations in Intercom.", "💬"),
+            ("Jira", "Issue tracking, project boards, and sprint logs.", "🔷"),
+            ("Linear", "Query issues, cycles, and manage tracking via GraphQL.", "🟣"),
+            ("Mailchimp", "Manage subscriber lists and campaigns.", "🐒"),
+            ("Dropbox", "Sync files, assets, and backups.", "📦"),
+        ]
+        for idx in range(0, len(integrations_data), 3):
+            ic1, ic2, ic3 = st.columns(3)
+            with ic1:
+                t, d, ico = integrations_data[idx]
+                st.markdown(f'<div class="import-card"><div><span style="font-size:1.4rem;">{ico}</span><div style="font-weight:700; color:#111827; margin-top:6px;">{t}</div><div style="font-size:0.76rem; color:#6B7280; margin-bottom:8px;">{d}</div><button style="background:#F26522; color:#FFF; border:none; border-radius:6px; padding:4px 12px; font-size:0.75rem; font-weight:600;">Sign in</button></div></div>', unsafe_allow_html=True)
+            if idx + 1 < len(integrations_data):
+                with ic2:
+                    t, d, ico = integrations_data[idx+1]
+                    st.markdown(f'<div class="import-card"><div><span style="font-size:1.4rem;">{ico}</span><div style="font-weight:700; color:#111827; margin-top:6px;">{t}</div><div style="font-size:0.76rem; color:#6B7280; margin-bottom:8px;">{d}</div><button style="background:#F26522; color:#FFF; border:none; border-radius:6px; padding:4px 12px; font-size:0.75rem; font-weight:600;">Sign in</button></div></div>', unsafe_allow_html=True)
+            if idx + 2 < len(integrations_data):
+                with ic3:
+                    t, d, ico = integrations_data[idx+2]
+                    st.markdown(f'<div class="import-card"><div><span style="font-size:1.4rem;">{ico}</span><div style="font-weight:700; color:#111827; margin-top:6px;">{t}</div><div style="font-size:0.76rem; color:#6B7280; margin-bottom:8px;">{d}</div><button style="background:#F26522; color:#FFF; border:none; border-radius:6px; padding:4px 12px; font-size:0.75rem; font-weight:600;">Sign in</button></div></div>', unsafe_allow_html=True)
+
+    with tab_custom:
+        st.markdown(
+            """
+            <div style="background:#FFFFFF; border:1px solid #E8DFD3; border-radius:12px; padding:1.4rem; margin-top:1rem;">
+                <h4 style="color:#111827; margin:0 0 6px 0;">Agent remembers what matters to you</h4>
+                <p style="color:#6B7280; font-size:0.86rem; margin-bottom:1.5rem;">As you work, Agent saves a short summary of your preferences and uses it across all projects and chats.</p>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.2rem;">
+                    <div>
+                        <strong style="color:#111827; font-size:0.9rem;">Memory</strong>
+                        <div style="font-size:0.78rem; color:#6B7280;">Control whether Agent remembers your preferences in this workspace.</div>
+                    </div>
+                    <input type="checkbox" checked style="accent-color:#F26522; transform:scale(1.3);" />
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.4rem;">
+                    <div>
+                        <strong style="color:#111827; font-size:0.9rem;">Memory in shared projects</strong>
+                        <div style="font-size:0.78rem; color:#6B7280;">Control whether Agent uses your preferences in collaborative projects.</div>
+                    </div>
+                    <input type="checkbox" style="accent-color:#F26522; transform:scale(1.3);" />
+                </div>
+                <label style="font-size:0.84rem; font-weight:600; color:#374151;">What Agent remembers</label>
+                <textarea style="width:100%; height:120px; background:#FAF7F2; border:1px solid #E5DCD0; border-radius:8px; color:#111827; padding:10px; font-size:0.88rem; outline:none; margin-top:6px;" placeholder="Write what Agent should remember about you..."></textarea>
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+
+elif st.session_state.current_nav == "Security":
+    st.markdown('<h1 style="font-size:2rem; font-weight:700; color:#111827; margin-bottom:0.4rem;">🛡️ Security Center</h1>', unsafe_allow_html=True)
+    st.markdown('<p style="color:#6B7280; font-size:0.9rem; margin-bottom:1.5rem;">Automated vulnerability testing, secrets protection, and static code analysis.</p>', unsafe_allow_html=True)
+    st.markdown(
+        """
+        <div class="import-card" style="margin-bottom:1.2rem;">
+            <div>
+                <strong style="color:#111827; font-size:1rem;">Run a deep security scan</strong>
+                <p style="color:#6B7280; font-size:0.84rem; margin:4px 0 10px 0;">Security Agent combines LLMs with leading static analysis tools to deliver a pen-test-grade report.</p>
+                <button class="btn-upgrade-orange">Run scan with Agent</button>
+            </div>
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+elif st.session_state.current_nav == "Workspace":
+    top_c1, top_c2 = st.columns([7, 3])
+    with top_c1:
+        st.markdown("### 📁 Ciwi AI Assistant · Live Build")
+    with top_c2:
+        if st.button("← Back to Home"):
+            st.session_state.current_nav = "Home"
+            st.rerun()
+
+    c_chat, c_prev = st.columns([1, 1], gap="medium")
+
+    with c_chat:
+        chat_box = st.container(height=540)
+        with chat_box:
+            for m in st.session_state.messages:
+                role = "assistant" if m["role"] == "model" else "user"
+                with st.chat_message(role):
+                    st.markdown(m["text"])
+
+        if follow := st.chat_input("Message Agent..."):
+            st.session_state.messages.append({"role": "user", "text": follow})
+            reply = query_gemini(follow, is_design=True)
+            if "```html" in reply:
+                st.session_state.html_code = reply.split("```html")[1].split("```")[0].strip()
+                st.session_state.messages.append({"role": "model", "text": reply.split("```html")[0].strip()})
+            else:
+                st.session_state.messages.append({"role": "model", "text": reply})
+            st.rerun()
+
+    with c_prev:
+        components.html(st.session_state.html_code, height=580, scrolling=True)
